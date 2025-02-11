@@ -8,26 +8,24 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div id="header_div">
+        Volunteer Site
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+      <h1>User Login</h1>
+      <p>
+        <label for="username">Username </label>
+        <input type="text" id="username" name="username" size="10" required></input>
       </p>
+      <p>
+        <label for="password">Password </label>
+        <input type="password" id="password" name="password" size="10" required></input>
+      </p>
+      <p>
+        <input type="submit" value="Login"></input> {/* Add a link to one of the other pages here*/}
+      </p>
+      <section>
+        <p>Not a member yet? <a>Register</a></p> {/* Add a link to the account creation page here */}
+      </section>
     </>
   )
 }
