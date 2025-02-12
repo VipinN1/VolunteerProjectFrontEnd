@@ -1,0 +1,45 @@
+#header_div {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    position: fixed;
+    z-index: 3000;
+    background: linear-gradient(#007FFF, aqua);
+    font-size: 30pt;
+    align-content: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bolder;
+  }
+  
+  #footer_div {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    position: fixed;
+    z-index: 3000;
+    background: linear-gradient(aqua, #007FFF);
+  }
+  
+  #login_button, #register_button {
+    top: 25%;
+    color: black;
+    position: absolute;
+    border: 2px blue solid;
+    width: 85px;
+    height: 40px;
+    font-size: 15px;
+    z-index: 3001;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: aqua;
+  }
+  
+  #login_button {
+    right: 20%;
+  }
+  
+  #register_button {
+    right: 10%;
+  }
+  
