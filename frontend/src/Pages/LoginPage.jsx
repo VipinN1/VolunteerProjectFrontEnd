@@ -6,13 +6,13 @@ function LoginPage() {
     <>
       <div id="header_div"> {/* Add a header_div to all pages w/ "Volunteer Site" in it; don't have the buttons for any page except the account register one as the rest should require a user to be logged in*/}
         Volunteer Site
-        <button id="login_button">Log In</button>
-        <button id="register_button">Register</button>
+        <a href="/login/"><button id="login_button">Log In</button></a>
+        <a href="/register/"><button id="register_button">Register</button></a>
       </div>
       
       <div id="body_div">
         <h1>Log Into Your Account</h1>
-        <form>
+        <form id="login_form" action="/profile/">
             <p>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" size="15" required></input>
@@ -26,7 +26,7 @@ function LoginPage() {
             </p>
         </form>
         <section>
-          <p id="register_msg">Not a member yet? <a>Register</a></p> {/* Add a link to the account creation page here */}
+          <p id="register_msg">Not a member yet? <a href="/register/">Register</a></p> {/* Add a link to the account creation page here */}
         </section>
       </div>
       <div id="footer_div"></div>  {/* Add a footer_div to all pages w/ "Volunteer Site" in it */}

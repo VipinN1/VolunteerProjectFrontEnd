@@ -5,13 +5,13 @@ function RegisterPage() {
     <>
       <div id="header_div"> {/* Add a header_div to all pages w/ "Volunteer Site" in it; don't have the buttons for any page except the account register one as the rest should require a user to be logged in*/}
         Volunteer Site
-        <button id="login_button">Log In</button>
-        <button id="register_button">Register</button>
+        <a href="/login/"><button id="login_button">Log In</button></a>
+        <a href="/register/"><button id="register_button">Register</button></a>
       </div>
       
       <div id="body_div">
         <h1>Create your account!</h1>
-        <form>
+        <form id="register_form" action="/profile/">
             <p>
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" size="15" required></input>
@@ -25,7 +25,7 @@ function RegisterPage() {
                 <input type="password" id="password" name="password" size="15" required></input>
             </p>
             <p>
-                <input type="submit" value="Register"></input>
+              <input type="submit" value="Register"></input>
             </p>
         </form>
         <br></br>
