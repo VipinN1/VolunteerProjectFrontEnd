@@ -1,19 +1,72 @@
+.profile-page {
+  display: flex;
+  justify-content: center;  /* Centers content horizontally */
+  align-items: center;  /* Centers content vertically */
+  flex-direction: column;  /* Stack elements vertically */
+  min-height: 100vh;  /* Full screen height */
+  padding-top: 300px;  /* Adds space between navbar and form */
+}
+
 .profile-container {
-    text-align: center;
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-  }
-  
-  .profile-container h1 {
-    color: blue;
-  }
-  
-  .logout-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: red;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
+  width: 60%;  /* Makes form wider */
+  max-width: 700px;  /* Prevents it from getting too wide */
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  color: white;
+  text-align: center;  /* Centers all text inside */
+}
+
+.profile-container h2 {
+  margin-bottom: 20px;  /* Space below heading */
+}
+
+.profile-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-container label {
+  width: 100%;
+  text-align: center;  /* Align labels to the left */
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.profile-container input,
+.profile-container select,
+.profile-container textarea {
+  width: 100%;  /* Full width of container */
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #646cff;
+  background: #242424;
+  color: white;
+  font-size: 1rem;
+}
+
+.profile-container textarea {
+  height: 80px;
+  resize: none;
+}
+
+.profile-container button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.profile-container button:hover {
+  background-color: #535bf2;
+}
