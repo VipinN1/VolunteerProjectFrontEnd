@@ -1,4 +1,4 @@
-  #header_div {
+#header_div {
     top: 0;
     left: 0;
     width: 100%;
@@ -52,18 +52,10 @@
     border: 1px solid black;
   }
 
-  input[type=submit][value="Login"] {
+  input[type=submit][value="Register"] {
     float:none;
     position: absolute;
-    bottom: -40px;
-  }
-
-  p[id="register_msg"] {
-    float:none;
-    position: absolute;
-    text-align:center;
-    width:100%;
-    bottom: -100px;
+    bottom: -20px;
   }
 
   input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
