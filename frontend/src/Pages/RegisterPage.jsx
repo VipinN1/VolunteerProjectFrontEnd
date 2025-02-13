@@ -29,7 +29,7 @@ function RegisterPage() {
         <br></br>
       </div>
       
-      <div id="footer_div"></div>  {/* Add a footer_div to all pages w/ "Volunteer Site" in it */}
+      
     </>
   )
 }

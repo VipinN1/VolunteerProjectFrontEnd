@@ -27,7 +27,7 @@ function LoginPage() {
           <p id="register_msg">Not a member yet? <a href="/register/">Register</a></p> {/* Add a link to the account creation page here */}
         </section>
       </div>
-      <div id="footer_div"></div>  {/* Add a footer_div to all pages w/ "Volunteer Site" in it */}
+     
     </>
   )
 }

@@ -1,25 +1,26 @@
 .profile-page {
   display: flex;
-  justify-content: center;  /* Centers content horizontally */
-  align-items: center;  /* Centers content vertically */
-  flex-direction: column;  /* Stack elements vertically */
-  min-height: 100vh;  /* Full screen height */
-  padding-top: 300px;  /* Adds space between navbar and form */
+  justify-content: center;  
+  align-items: center;  
+  min-height: 100vh;  
+  width: 100vw; 
+  padding-top: 100px;  
+  background-color: #282828; 
 }
 
 .profile-container {
-  width: 60%;  /* Makes form wider */
-  max-width: 700px;  /* Prevents it from getting too wide */
-  background: #1a1a1a;
+  width: 80%;  
+  max-width: 900px;  
+  background: #686868;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   color: white;
-  text-align: center;  /* Centers all text inside */
+  text-align: center;
 }
 
 .profile-container h2 {
-  margin-bottom: 20px;  /* Space below heading */
+  margin-bottom: 20px;
 }
 
 .profile-container form {
@@ -31,7 +32,7 @@
 
 .profile-container label {
   width: 100%;
-  text-align: center;  /* Align labels to the left */
+  text-align: left;  
   font-weight: bold;
   margin-top: 10px;
 }
@@ -39,13 +40,13 @@
 .profile-container input,
 .profile-container select,
 .profile-container textarea {
-  width: 100%;  /* Full width of container */
+  width: 100%;  
   padding: 10px;
   margin-top: 5px;
   border-radius: 5px;
   border: 1px solid #646cff;
-  background: #242424;
-  color: white;
+  background: #ffffff;
+  color: black;
   font-size: 1rem;
 }
 
