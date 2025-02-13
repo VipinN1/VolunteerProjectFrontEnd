@@ -4,12 +4,13 @@ import LoginPage from "./Pages/LoginPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
 import RegisterPage from "./Pages/RegisterPage.jsx";
 import EventPage from "./Pages/EventPage.jsx";
+import "./App.css";
 
 function App() {
   return (
       <div>
         <header id="header_div"> 
-        <h2>__________</h2>
+          <p>Volunteer Site</p>
           <nav>
             <Link to="/">Home</Link>|  
             <Link to="/login">Login</Link>|  

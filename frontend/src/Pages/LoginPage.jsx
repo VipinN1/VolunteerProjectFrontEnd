@@ -4,11 +4,9 @@ function LoginPage() {
   return (
    
     <>
-      <div id="header_div"> {/* Add a header_div to all pages w/ "Volunteer Site" in it; don't have the buttons for any page except the account register one as the rest should require a user to be logged in*/}
-        Volunteer Site
-        <a href="/login/"><button id="login_button">Log In</button></a>
-        <a href="/register/"><button id="register_button">Register</button></a>
-      </div>
+      
+      <a href="/login/"><button id="login_button_log">Log In</button></a>
+      <a href="/register/"><button id="register_button_log">Register</button></a>
       
       <div id="body_div">
         <h1>Log Into Your Account</h1>
