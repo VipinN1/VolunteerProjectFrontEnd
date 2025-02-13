@@ -1,0 +1,38 @@
+/* Center the notifications container */
+.notifications-container {
+    text-align: center;
+    width: 60%;
+    margin: 80px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #007FFF;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+
+/* Style the notification title */
+.notifications-container h2 {
+    color: #007FFF;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Style the "No new notifications" message */
+.notifications-container p {
+    font-size: 18px;
+    color: #333;
+    font-weight: normal;
+}
+
+/* Improve readability */
+body {
+    background-color: #f4faff; /* Light blue background */
+}
+
+
+
+

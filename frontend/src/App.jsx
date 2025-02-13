@@ -4,6 +4,7 @@ import LoginPage from "./Pages/LoginPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
 import RegisterPage from "./Pages/RegisterPage.jsx";
 import EventPage from "./Pages/EventPage.jsx";
+import Notifications from "./Pages/Notifications.jsx";
 import "./App.css";
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
             <Link to="/login">Login</Link>|  
             <Link to="/register">Register</Link>|  
             <Link to="/profile">Profile</Link>|
-            <Link to="/event">Event Management</Link> 
+            <Link to="/event">Event Management</Link>|
+            <Link to="/notifications">Notifications</Link> 
           </nav>
         </header>
 
@@ -27,6 +29,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/event" element={<EventPage />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </main>
 
