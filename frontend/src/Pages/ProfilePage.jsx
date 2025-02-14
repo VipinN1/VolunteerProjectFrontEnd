@@ -48,6 +48,7 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page">
+      <title>Volunteer Site - Profile</title>
       <div className="profile-container">
         <h2>Complete Your Volunteer Profile</h2>
         <form onSubmit={handleSubmit}>

@@ -10,6 +10,7 @@ const ParticipationHistory = () => {
 
     return (
         <div className="history-container">
+            <title>Volunteer Site - Participation History</title>
             <h2>Volunteer Participation History</h2>
             <table>
                 <thead>
