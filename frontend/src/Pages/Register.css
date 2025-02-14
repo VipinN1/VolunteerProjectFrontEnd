@@ -31,10 +31,10 @@
     margin-left:auto;
     margin-right:auto;
     width:50%;
-    height: 40%;
-    border: 5px groove silver;
+    height: 47.5%;
+    border: 2px solid #007FFF;
     border-radius: 30px;
-    background:lightcyan;
+    background:white;
   }
 
   form[id="register_form"] {
@@ -43,31 +43,46 @@
     margin-right:auto;
     align-content: center;
     width: 30%;
+    position: relative;
+    top: -10%;
   }
 
   label {
+    position: relative;
     text-align: right;
     float: left;
     clear: left;
   }
 
   input[type=text], input[type=email], input[type=password] {
-    float: right;
-    border: 1px solid black;
-    border-radius:5px;
-  }
-
-  input[type=submit][value="Register"] {
-    float:none;
-    position: absolute;
-    align-content:center;
-    bottom: 30px;
-    border: 1px solid black;
-    border-radius: 5px;
+    position: relative;
+    top:25%;
+    float: left;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    padding: 10px;
+    outline:none;
+    transition: border 0.3s ease-in-out;
   }
 
   input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
-    background-color: lightgoldenrodyellow;
+    border: 1px solid #007bff;
+  }
+
+  button[type=submit][value="Register"][id="register_button"] {
+    float:none;
+    position: relative;
+    align-content:center;
+    top:20px;
+    width:50%;
+    font-size:15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  input[type=text],input[type=email],input[type=password],button[id="register_button"] {
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
   }
 
   #login_button_reg, #register_button_reg {
@@ -91,4 +106,9 @@
   
   #register_button_reg {
     right:2.5%;
+  }
+
+
+  #register_h1 {
+    color: #007FFF;
   }

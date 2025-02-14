@@ -9,7 +9,7 @@ function RegisterPage() {
         <a href="/register/"><button id="register_button_reg">Register</button></a>
         
         <div id="body_div_reg">
-          <h1>Create your account!</h1>
+          <h1 id="register_h1">Create your account!</h1>
           <form id="register_form" action="/profile/" method="POST">
               <p>
                   <label for="email">Email:</label>
@@ -24,7 +24,7 @@ function RegisterPage() {
                   <input type="password" id="password" name="password" size="15" required></input>
               </p>
               <p>
-                <input type="submit" value="Register"></input>
+                <button id="register_button" type="submit" value="Register">Register</button>
               </p>
           </form>
           <br></br>

@@ -7,6 +7,7 @@ import RegisterPage from "./Pages/RegisterPage.jsx";
 import EventPage from "./Pages/EventPage.jsx";
 import Notifications from "./Pages/Notifications.jsx";
 import ParticipationHistory from "./Pages/ParticipationHistory.jsx";
+import ForgotPassword from "./Pages/ForgotPasswordPage.jsx";
 
 import "./App.css";
 
