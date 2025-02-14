@@ -63,8 +63,7 @@ function EventPage (){
 
     return(
         <>
-            
-            <title>Volunteer Site - Events</title>
+           
             <div className="body1">
                 <h2 id="main-header">Welcome, admin</h2>
 

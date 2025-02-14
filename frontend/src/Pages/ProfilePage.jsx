@@ -40,7 +40,6 @@ const ProfilePage = () => {
     setProfile((prev) => ({ ...prev, availability: selectedDates }));
   };
 
-  // Handle form submission (currently just logs the data)
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Profile Data:", profile);
@@ -50,7 +49,7 @@ const ProfilePage = () => {
     <div className="profile-page">
       <title>Volunteer Site - Profile</title>
       <div className="profile-container">
-        <h2>Complete Your Volunteer Profile</h2>
+        <h2>Your Profile information:</h2>
         <form onSubmit={handleSubmit}>
           <label>Full Name *</label>
           <input
