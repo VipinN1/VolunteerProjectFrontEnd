@@ -5,6 +5,9 @@ import LoginPage from "./Pages/LoginPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
 import RegisterPage from "./Pages/RegisterPage.jsx";
 import EventPage from "./Pages/EventPage.jsx";
+import Notifications from "./Pages/Notifications.jsx";
+import ParticipationHistory from "./Pages/ParticipationHistory.jsx";
+
 import "./App.css";
 
 function App() {
@@ -29,6 +32,8 @@ function App() {
               <Link to="/register" onClick={() => setDropdownOpen(false)}>Register</Link>
               <Link to="/profile" onClick={() => setDropdownOpen(false)}>Profile</Link>
               <Link to="/event" onClick={() => setDropdownOpen(false)}>Event Management</Link>
+              <Link to="/notifications" onClick={() => setDropdownOpen(false)}>Notifications</Link>
+              <Link to="/participationhistory" onClick={() => setDropdownOpen(false)}>Participation History</Link>
             </div>
           )}
         </div>
@@ -41,6 +46,9 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/event" element={<EventPage />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/participationhistory" element={<ParticipationHistory />} />
+          
         </Routes>
       </main>
 
