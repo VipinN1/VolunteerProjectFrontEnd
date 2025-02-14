@@ -19,15 +19,34 @@
   }
 
   .form-header{
-    margin-left: 170px;    
+    margin-left: 170px;
+    color: #007FFF;
+    font-size: 24px;
+    font-weight: bold;    
   }
 
   .form1 {
     float: left;
-    width: 45%;
-    padding-bottom: 0px;
-    padding-top: -20px;
-    
+    padding-bottom: 0px;    
+    width: 550px;
+    margin-left: 150px;
+    margin-top: 20px;
+    margin-bottom: 10px;        
+}
+
+.form2 {
+    width: 600px;        /* Or 300px, etc. */
+    float: left;       /* Keep the same float if that's how you’re positioning it */
+    margin-left: 100px;
+    margin-right: 70px;
+    margin-top: 20px;
+  }
+
+.form1, .form2 {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid #007FFF;
 }
 
 .form1 p, .form2 p {
@@ -37,12 +56,27 @@
     margin-bottom: 15px; 
 }
 
+.form1 label,
+.form2 label {
+  font-weight: bold;
+  
+}
+
+
 .form1 p {
-    margin-left: 50px;
+    margin-left: -50px;
+}
+
+.form1 h2 {
+    margin-left: 5px;
 }
 
 .form2 p {
-    margin-left: 110px;
+    margin-left: -10px;
+}
+
+.form2 h2 {
+    margin-left: 25px;
 }
 
 .body1 input, 
@@ -73,7 +107,7 @@
 }
 
 .body1 select {
-    width: 230px;
+    width: 270px;
 }
 
 .body1 input, .body1 textarea, 
@@ -87,6 +121,8 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
+    display: block;        /* Make the button behave like a block */
+  margin-left: 60px;
 }
 
 .body1 button:hover {
