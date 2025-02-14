@@ -22,22 +22,27 @@
     background: linear-gradient(aqua, #007FFF);
   }
 
-  #body_div {
+  #body_div_reg {
     position:absolute;
     top:30%;
+    left:25%;
     text-align:center;
     align-content: center;
     margin-left:auto;
     margin-right:auto;
-    width:100%;
+    width:50%;
+    height: 40%;
+    border: 5px groove silver;
+    border-radius: 30px;
+    background:lightcyan;
   }
 
-  form {
+  form[id="register_form"] {
     text-align: center;
     margin-left:auto;
     margin-right:auto;
     align-content: center;
-    width: 15%;
+    width: 30%;
   }
 
   label {
@@ -49,12 +54,16 @@
   input[type=text], input[type=email], input[type=password] {
     float: right;
     border: 1px solid black;
+    border-radius:5px;
   }
 
   input[type=submit][value="Register"] {
     float:none;
     position: absolute;
-    bottom: -20px;
+    align-content:center;
+    bottom: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
   }
 
   input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
