@@ -10,7 +10,7 @@ function LoginPage() {
       
       <div id="body_div">
         <h1 id="login_h1">Log Into Your Account</h1>
-        <form id="login_form" action="/profile/">
+        <form id="login_form" action="/profile/" method="POST">
             <p id="login_p">
                 <label for="username_log">Username:</label>
                 <input type="text" id="username_log" name="username_log" size="15" required></input>

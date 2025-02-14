@@ -9,7 +9,7 @@ function RegisterPage() {
       
       <div id="body_div_reg">
         <h1>Create your account!</h1>
-        <form id="register_form" action="/profile/">
+        <form id="register_form" action="/profile/" method="POST">
             <p>
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" size="15" required></input>
