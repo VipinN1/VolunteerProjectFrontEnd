@@ -1,4 +1,6 @@
 import "./Home.css"; 
+import { Link } from 'react-router-dom';
+
 
 function HomePage() {
   return (
@@ -6,7 +8,9 @@ function HomePage() {
       <header className="hero-section">
         <h1>Make a Difference, Volunteer Today!</h1>
         <p>Join a community of passionate volunteers working together for a better world.</p>
-        <button className="cta-button">Get Started</button>
+        <Link to="/register">
+          <button className="cta-button">Get Started</button>
+        </Link>
       </header>
 
       <section className="features-section">
