@@ -1,26 +1,13 @@
-#header_div_register {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10%;
-    position: fixed;
-    z-index: 3000;
-    font-size: 30pt;
-    align-content: center;
-    text-align:center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-weight: bolder;
-  }
-  
-  #footer_div {
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 10%;
-    position: fixed;
-    z-index: 3000;
-    background: linear-gradient(aqua, #007FFF);
-  }
+.register-container {
+  text-align:center;
+  margin-top: 150px;
+  width: 80%;
+  max-width: 900px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
 
   #body_div_reg {
     position:absolute;
@@ -31,10 +18,11 @@
     margin-left:auto;
     margin-right:auto;
     width:50%;
-    height: 47.5%;
+    height: 55%;
     border: 2px solid #007FFF;
     border-radius: 30px;
     background:white;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
   }
 
   form[id="register_form"] {
@@ -42,22 +30,24 @@
     margin-left:auto;
     margin-right:auto;
     align-content: center;
-    width: 30%;
+    width: 40%;
     position: relative;
-    top: -10%;
+    top: -7.5%;
   }
 
-  label {
+  form[id="register_form"] p label {
     position: relative;
     text-align: right;
     float: left;
     clear: left;
+    font-weight: bold;
+    color: #007FFF;
   }
 
   input[type=text], input[type=email], input[type=password] {
     position: relative;
     top:25%;
-    float: left;
+    float: none;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 100%;
@@ -75,8 +65,12 @@
     position: relative;
     align-content:center;
     top:20px;
-    width:50%;
-    font-size:15px;
+    left:10px;
+    width:100%;
+    background-color: #007FFF;
+    color: white;
+    font-size:1rem;
+    font-weight:bold;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
@@ -107,7 +101,6 @@
   #register_button_reg {
     right:2.5%;
   }
-
 
   #register_h1 {
     color: #007FFF;

@@ -21,11 +21,11 @@ function LoginPage() {
                   <input type="password" id="password_log" name="password_log" size="15" required></input>
               </p>
               <p id="login_p">
-                  <input type="submit" value="Login"></input>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
+                  <button type="submit" value="Login">Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
               </p>
           </form>
-          <section>
-          <p id="forgot_msg"><a>Forgot your password?</a></p> {/* Add a link to the account creation page here */}
+          <section id="msg_section">
+            <p id="forgot_msg"><a>Forgot your password?</a></p> {/* Add a link to the account creation page here */}
             <p id="register_msg">Not a member yet? <a href="/register/">Register</a></p> {/* Add a link to the account creation page here */}
           </section>
         </div>
