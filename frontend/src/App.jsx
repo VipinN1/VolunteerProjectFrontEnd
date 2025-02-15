@@ -8,6 +8,7 @@ import EventPage from "./Pages/EventPage.jsx";
 import Notifications from "./Pages/Notifications.jsx";
 import ParticipationHistory from "./Pages/ParticipationHistory.jsx";
 import ForgotPassword from "./Pages/ForgotPasswordPage.jsx";
+import ResetPassword from "./Pages/ResetPasswordPage.jsx";
 
 import "./App.css";
 
@@ -49,7 +50,8 @@ function App() {
           <Route path="/event" element={<EventPage />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/participationhistory" element={<ParticipationHistory />} />
-          
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
         </Routes>
       </main>
 

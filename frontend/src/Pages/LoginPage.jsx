@@ -11,7 +11,7 @@ function LoginPage() {
         
         <div id="body_div">
           <h1 id="login_h1">Log Into Your Account</h1>
-          <form id="login_form" action="/profile/" method="POST">
+          <form id="login_form" action="/profile/">
               <p id="login_p">
                   <label for="username_log">Username:</label>
                   <input type="text" id="username_log" name="username_log" size="15" required></input>
@@ -25,7 +25,7 @@ function LoginPage() {
               </p>
           </form>
           <section id="msg_section">
-            <p id="forgot_msg"><a>Forgot your password?</a></p> {/* Add a link to the account creation page here */}
+            <p id="forgot_msg"><a href="/forgotpassword/">Forgot your password?</a></p> {/* Add a link to the account creation page here */}
             <p id="register_msg">Not a member yet? <a href="/register/">Register</a></p> {/* Add a link to the account creation page here */}
           </section>
         </div>
