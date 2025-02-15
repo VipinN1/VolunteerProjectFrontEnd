@@ -8,7 +8,7 @@ function HomePage() {
       <header className="hero-section">
         <h1>Make a Difference, Volunteer Today!</h1>
         <p>Join a community of passionate volunteers working together for a better world.</p>
-        <Link to="/register">
+        <Link to="/login">
           <button className="cta-button">Get Started</button>
         </Link>
       </header>
