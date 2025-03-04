@@ -1,5 +1,5 @@
 import { Routes, Route, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HomePage from "./Pages/HomePage.jsx";
 import LoginPage from "./Pages/LoginPage.jsx";
 import ProfilePage from "./Pages/ProfilePage.jsx";
@@ -10,9 +10,25 @@ import ParticipationHistory from "./Pages/ParticipationHistory.jsx";
 import ForgotPassword from "./Pages/ForgotPasswordPage.jsx";
 import ResetPassword from "./Pages/ResetPasswordPage.jsx";
 
+
+
+
 import "./App.css";
 
 function App() {
+
+  const [backendData, setBackendData] = useState([{}])
+
+  useEffect(() => {
+    fetch("/api").then(
+      response => response.json()
+  ).then(
+    data => {
+      setBackendData(data)
+    }
+  )
+}, [])
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
