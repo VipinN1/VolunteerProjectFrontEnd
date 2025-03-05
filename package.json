@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "react-router-dom": "^7.1.5"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0"
   }
 }
