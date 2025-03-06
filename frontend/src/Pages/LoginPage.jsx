@@ -1,8 +1,21 @@
 import "./Login.css";
+import React, {useState} from "react";
+import Axios from "axios";
 
 function LoginPage() {
-  return (
-   
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = () => {
+    Axios.post("http://localhost:5000/login", {
+        username: username, 
+        password: password
+    }).then((response) => {
+      console.log(response);
+    });
+  };
+  
+  return ( 
     <>
       <div classname="login-container">
         <title>Volunteer Site - Login</title>
@@ -14,14 +27,14 @@ function LoginPage() {
           <form id="login_form" action="/profile/">
               <p id="login_p">
                   <label for="username_log">Username:</label>
-                  <input type="text" id="username_log" name="username_log" size="15" required></input>
+                  <input type="text" id="username_log" name="username_log" size="15" required onChange={(e)=>{setUsername(e.target.value);}}></input>
               </p>
               <p id="login_p">
                   <label for="password_log">Password:</label>
-                  <input type="password" id="password_log" name="password_log" size="15" required></input>
+                  <input type="password" id="password_log" name="password_log" size="15" required onChange={(e)=>{setPassword(e.target.value);}}></input>
               </p>
               <p id="login_p">
-                  <button type="submit" value="Login">Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
+                  <button type="submit" value="Login" onClick={login()}>Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
               </p>
           </form>
           <section id="msg_section">

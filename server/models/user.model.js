@@ -27,6 +27,13 @@ class User {
         return this.email;
     }
 
+    set password(password) {
+        this.password = password;
+    }
+    get password() {
+        return this.password;
+    }
+
     set address1(address) {
         this.address1 = address;
     }
