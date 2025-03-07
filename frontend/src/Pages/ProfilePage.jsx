@@ -23,10 +23,15 @@ const ProfilePage = () => {
   const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/profile")
+    let token = sessionStorage.getItem('auth-token')
+    if (!token) {return}
+    if (token == "John Doe") {
+      fetch("http://localhost:5000/api/profile")
       .then((response) => response.json())
       .then((data) => setProfile(data))
       .catch((error) => console.error("Error fetching profile data:", error));
+    }
+    
   }, []);
 
   // Handle input changes
