@@ -7,24 +7,34 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+let storedProfile = {
+    fullName: "John Doe",
+    address1: "2331 Apple street",
+    address2: "",
+    city: "Houston",
+    state: "TX",
+    zipCode: "33213",
+    skills: ["Teaching", "Medical Aid", "Fundraising"],
+    preferences: "Weekends through May",
+    availability: ["2025-03-10", "2025-03-15"],
+};
+
+// Fetch users
 app.get("/api", (req, res) => {
-    res.json({ "users": ["userOne", "UserTwo", "UserThree"] });
+    res.json({ users: ["userOne", "UserTwo", "UserThree"] });
 });
 
-// Hardcoded profile data
+// Fetch profile data
 app.get("/api/profile", (req, res) => {
-    res.json({
-        fullName: "John Doe",
-        address1: "2331 Apple street",
-        address2: "",
-        city: "Houston",
-        state: "TX",
-        zipCode: "33213",
-        skills: ["Teaching", "Medical Aid", "Fundraising"],
-        preferences: "Weekends through May",
-        availability: ["2025-03-10", "2025-03-15"]
-    });
+    res.json(storedProfile);
 });
+
+// Save profile data
+app.post("/api/profile", (req, res) => {
+    storedProfile = req.body;
+    res.json({ message: "Profile updated successfully", profile: storedProfile });
+});
+
 
 // Hardcoded notifications
 const notifications = [

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.2% </span>
+                <span class="strong">93.93% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/29</span>
+                <span class='fraction'>31/33</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/6</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.2% </span>
+                <span class="strong">93.93% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/29</span>
+                <span class='fraction'>31/33</span>
             </div>
         
             
@@ -134,7 +134,17 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -144,21 +154,31 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -214,24 +234,34 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 &nbsp;
-app.get("/api", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    res.json({ "users": ["userOne", "UserTwo", "UserThree"] });</span>
+let storedProfile = {
+    fullName: "John Doe",
+    address1: "2331 Apple street",
+    address2: "",
+    city: "Houston",
+    state: "TX",
+    zipCode: "33213",
+    skills: ["Teaching", "Medical Aid", "Fundraising"],
+    preferences: "Weekends through May",
+    availability: ["2025-03-10", "2025-03-15"],
+};
+&nbsp;
+// Fetch users
+app.get("/api", (req, res) =&gt; {
+    res.json({ users: ["userOne", "UserTwo", "UserThree"] });
 });
 &nbsp;
-// Hardcoded profile data
-app.get("/api/profile", <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >    res.json({</span>
-        fullName: "John Doe",
-        address1: "2331 Apple street",
-        address2: "",
-        city: "Houston",
-        state: "TX",
-        zipCode: "33213",
-        skills: ["Teaching", "Medical Aid", "Fundraising"],
-        preferences: "Weekends through May",
-        availability: ["2025-03-10", "2025-03-15"]
-    });
+// Fetch profile data
+app.get("/api/profile", (req, res) =&gt; {
+    res.json(storedProfile);
 });
+&nbsp;
+// Save profile data
+app.post("/api/profile", (req, res) =&gt; {
+    storedProfile = req.body;
+    res.json({ message: "Profile updated successfully", profile: storedProfile });
+});
+&nbsp;
 &nbsp;
 // Hardcoded notifications
 const notifications = [
@@ -258,13 +288,13 @@ app.post("/api/notifications", (req, res) =&gt; {
     res.status(201).json({ message: "Notification added successfully!", newNotification });
 });
 &nbsp;
-// ✅ New Hardcoded Volunteer History Data
+//hardcoded volunteer history data
 const volunteerHistory = [
     { id: 1, eventName: "Food Drive", description: "Helping the needy", location: "NYC", skills: "Cooking", urgency: "High", eventDate: "2024-03-15", status: "Completed" },
     { id: 2, eventName: "Tree Planting", description: "Environmental Event", location: "LA", skills: "Gardening", urgency: "Medium", eventDate: "2024-04-10", status: "Upcoming" },
 ];
 &nbsp;
-// ✅ New Endpoint: Get Volunteer History
+&nbsp;
 app.get("/api/volunteer-history", (req, res) =&gt; {
     res.json(volunteerHistory);
 });
@@ -283,7 +313,7 @@ module.exports = app;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-07T05:50:19.809Z
+                at 2025-03-07T20:07:08.629Z
             </div>
         <script src="prettify.js"></script>
         <script>
