@@ -1,14 +1,12 @@
 const express = require('express');
-const morgan = require('morgan');
 const cors = require("cors");
 
 const app = express();
 
 app.use(express.json);
-app.use(morgan('tiny'));
 app.use(cors());
 
-const db = {
+var db = {
     "dbPos": [0],
     "username": ["John Doe"],
     "email": ["johndoe@gmail.com"],
@@ -80,6 +78,7 @@ app.post('/register', (req, res) => {
         db["skills"].push([]);
         db["preferences"].push([]);
         db["availability"].push([]);
+        res.send("Registration successful!");
     }
     catch(exception) {
         console.log(exception);
@@ -87,6 +86,7 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+    console.log("Login connection established");
     try {
         const username = req.body.username;
         if (username == "") {
@@ -105,6 +105,8 @@ app.post('/login', (req, res) => {
         if (password != db["password"].at(found_index)) {
             throw new ReferenceError("Wrong password")
         }
+        console.log("Login successful!");
+        res.send("Login successful!");
     }
     catch(exception) {
         console.log(exception);

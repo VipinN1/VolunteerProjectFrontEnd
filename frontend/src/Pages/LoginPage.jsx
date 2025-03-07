@@ -2,17 +2,47 @@ import "./Login.css";
 import React, {useState} from "react";
 import Axios from "axios";
 
-function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
-  const login = () => {
+
+function LoginPage( {handleLogin} ) {
+  const [usernameLog, setUsernameLog] = useState("");
+  const [passwordLog, setPasswordLog] = useState("");
+
+  const handleUserChange = (event) => {
+    setUsernameLog(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPasswordLog(event.target.value);
+  };
+
+  const login = (event) => {  // Placeholder! Make better later if time allows
+    event.preventDefault();
+    handleLogin(document.getElementById("username_log").value,document.getElementById("password_log").value);
+
+    /*event.preventDefault();
+    handleLogin(usernameLog, passwordLog);
+    setUsernameLog('');
+    setPasswordLog('');*/
+    /*console.log("Login attempt");
     Axios.post("http://localhost:5000/login", {
-        username: username, 
-        password: password
+        username: usernameLog, 
+        password: passwordLog
     }).then((response) => {
       console.log(response);
-    });
+      if (response != "Login successful!") {
+          console.log("Wrong username/password combo!");
+          document.getElementById("username_log").value="";
+          document.getElementById("password_log").value="";
+      }
+      else {
+        console.log("Successful login");
+        const token = username;
+        sessionStorage.token('auth-token', token);
+        redirect_profile();
+        return false;
+      }
+    });*/
   };
   
   return ( 
@@ -24,17 +54,17 @@ function LoginPage() {
         
         <div id="body_div">
           <h1 id="login_h1">Log Into Your Account</h1>
-          <form id="login_form" action="/profile/">
+          <form id="login_form" onSubmit={login}>
               <p id="login_p">
                   <label for="username_log">Username:</label>
-                  <input type="text" id="username_log" name="username_log" size="15" required onChange={(e)=>{setUsername(e.target.value);}}></input>
+                  <input type="text" id="username_log" name="username_log" size="15" required onChange={handleUserChange}></input>
               </p>
               <p id="login_p">
                   <label for="password_log">Password:</label>
-                  <input type="password" id="password_log" name="password_log" size="15" required onChange={(e)=>{setPassword(e.target.value);}}></input>
+                  <input type="password" id="password_log" name="password_log" size="15" required onChange={handlePasswordChange}></input>
               </p>
               <p id="login_p">
-                  <button type="submit" value="Login" onClick={login()}>Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
+                  <button type="submit" value="Login" onClick={console.log("button clicked")}>Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}
               </p>
           </form>
           <section id="msg_section">

@@ -2,19 +2,22 @@ import "./Register.css";
 import React, {useState} from "react";
 import Axios from "axios";
 
-function RegisterPage() {
+
+function RegisterPage( {handleRegister}) {
   const [emailReg, setEmailReg] = useState("");
   const [usernameReg, setUsernameReg] = useState("");
   const [passwordReg, setPasswordReg] = useState("");
 
-  const register = () => {
-    Axios.post("http://localhost:5000/register", {
+  const register = (event) => {
+    event.preventDefault();
+    handleRegister(document.getElementById("email").value, document.getElementById("username").value, document.getElementById("password").value);
+    /*Axios.post("http://localhost:5000/register", {
         email: emailReg, 
         username: usernameReg, 
         password: passwordReg
     }).then((response) => {
       console.log(response);
-    });
+    });*/
   };
 
   return (
