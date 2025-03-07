@@ -4,15 +4,12 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 
-app.use(cors()); // Enable CORS so frontend can communicate with backend
-app.use(express.json()); // Enable JSON body parsing
-
-// Mock users data
+app.use(cors()); 
+app.use(express.json()); 
 app.get("/api", (req, res) => {
     res.json({ "users": ["userOne", "UserTwo", "UserThree"] });
 });
 
-// Mock profile data
 app.get("/api/profile", (req, res) => {
     res.json({
         fullName: "John Doe",
