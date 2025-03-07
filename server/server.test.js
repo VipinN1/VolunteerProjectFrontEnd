@@ -89,7 +89,61 @@ describe("User Profile API Tests", () => {
             .post("/api/profile")
             .send({});
 
-        expect(res.statusCode).toEqual(200); // Should still succeed
+        expect(res.statusCode).toEqual(200);
         expect(res.body).toHaveProperty("message", "Profile updated successfully");
     });
+});
+
+describe("Event API Tests", () => {
+    it("should return a list of events", async () => {
+        const res = await request(app).get("/api/events");
+        expect(res.statusCode).toEqual(200);
+        expect(Array.isArray(res.body)).toBe(true);
+    });
+
+    it("should validate required fields when creating an event", async () => {
+        const res = await request(app).post("/api/events").send({});
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("All fields (name, location, requiredSkills, urgency, date) are required.");
+    });
+
+
+    it("should create a new event successfully", async () => {
+        const newEvent = {
+            name: "Community Outreach",
+            location: "Houston",
+            requiredSkills: ["Public Speaking"],
+            urgency: "Medium",
+            date: "2025-09-15"
+        };
+        const res = await request(app).post("/api/events").send(newEvent);
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toMatchObject(newEvent);
+    });
+    
+
+    
+});
+
+describe("Volunteer API Tests", () => {
+    it("should return a list of volunteers", async () => {
+        const res = await request(app).get("/api/volunteers");
+        expect(res.statusCode).toEqual(200);
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBeGreaterThan(0);
+    });
+
+    it("should match volunteers to events", async () => {
+        const res = await request(app).post("/api/match").send({ email: "johndoe@gmail.com" });
+        expect(res.statusCode).toEqual(200);
+        expect(res.body).toHaveProperty("volunteer");
+        expect(res.body).toHaveProperty("matchingEvents");
+    });
+
+    it("should return 404 for non-existent volunteer", async () => {
+        const res = await request(app).post("/api/match").send({ email: "nonexistent@gmail.com" });
+        expect(res.statusCode).toEqual(404);
+        expect(res.body.message).toBe("Volunteer not found");
+    });
+
 });

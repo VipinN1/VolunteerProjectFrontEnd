@@ -7,6 +7,11 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+const eventRoutes = require("./routes/eventRoutes");
+const volunteerRoutes = require("./routes/volunteerRoutes");
+app.use("/api", eventRoutes);
+app.use("/api", volunteerRoutes);
+
 let storedProfile = {
     fullName: "John Doe",
     address1: "2331 Apple street",
@@ -35,7 +40,6 @@ app.post("/api/profile", (req, res) => {
     res.json({ message: "Profile updated successfully", profile: storedProfile });
 });
 
-
 // Hardcoded notifications
 const notifications = [
     { eventName: "Community Cleanup", message: "Reminder: Event this Saturday!", date: "2025-03-10" },
@@ -61,12 +65,11 @@ app.post("/api/notifications", (req, res) => {
     res.status(201).json({ message: "Notification added successfully!", newNotification });
 });
 
-//hardcoded volunteer history data
+// Hardcoded volunteer history data
 const volunteerHistory = [
     { id: 1, eventName: "Food Drive", description: "Helping the needy", location: "NYC", skills: "Cooking", urgency: "High", eventDate: "2024-03-15", status: "Completed" },
     { id: 2, eventName: "Tree Planting", description: "Environmental Event", location: "LA", skills: "Gardening", urgency: "Medium", eventDate: "2024-04-10", status: "Upcoming" },
 ];
-
 
 app.get("/api/volunteer-history", (req, res) => {
     res.json(volunteerHistory);
