@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Profile.css";
 
 const ProfilePage = () => {
@@ -21,6 +21,13 @@ const ProfilePage = () => {
   ];
 
   const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/profile")
+      .then((response) => response.json())
+      .then((data) => setProfile(data))
+      .catch((error) => console.error("Error fetching profile data:", error));
+  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -49,7 +56,8 @@ const ProfilePage = () => {
     <div className="profile-page">
       <title>Volunteer Site - Profile</title>
       <div className="profile-container">
-        <h2>Your Profile information:</h2>
+        <h2>Your Profile Information</h2>
+
         <form onSubmit={handleSubmit}>
           <label>Full Name *</label>
           <input
@@ -62,7 +70,6 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-         
           <label>Address 1 *</label>
           <input
             type="text"
@@ -74,7 +81,6 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-         
           <label>Address 2</label>
           <input
             type="text"
@@ -85,7 +91,6 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-         
           <label>City *</label>
           <input
             type="text"
@@ -97,7 +102,6 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-          
           <label>State *</label>
           <select name="state" required value={profile.state} onChange={handleChange}>
             <option value="">Select a state</option>
@@ -108,7 +112,6 @@ const ProfilePage = () => {
             ))}
           </select>
 
-          
           <label>Zip Code *</label>
           <input
             type="text"
@@ -122,17 +125,15 @@ const ProfilePage = () => {
             onChange={handleChange}
           />
 
-          
           <label>Skills (Hold Ctrl/Cmd to select multiple) *</label>
           <select multiple required onChange={handleSkillChange}>
             {skillsOptions.map((skill) => (
-              <option key={skill} value={skill}>
+              <option key={skill} value={skill} selected={profile.skills.includes(skill)}>
                 {skill}
               </option>
             ))}
           </select>
 
-          
           <label>Preferences</label>
           <textarea
             name="preferences"
@@ -141,11 +142,9 @@ const ProfilePage = () => {
             onChange={handleChange}
           ></textarea>
 
-         
           <label>Availability (Select multiple dates) *</label>
           <input type="date" multiple required onChange={handleAvailabilityChange} />
 
-          {/* Submit Button */}
           <button type="submit">Save Profile</button>
         </form>
       </div>
