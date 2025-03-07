@@ -37,10 +37,9 @@ const users = [
   }
 ];
 
-// Endpoint to get all volunteers
 router.get('/volunteers', (req, res) => res.json(users));
 
-// Volunteer matching endpoint
+// Volunteer matching
 router.post('/match', (req, res) => {
   const { email } = req.body;
   const volunteer = users.find(v => v.email === email);
@@ -48,7 +47,7 @@ router.post('/match', (req, res) => {
     return res.status(404).json({ message: "Volunteer not found" });
   }
   
-  // Use matching logic: check for skill match (case-insensitive) and availability
+  // Matching logic
   const matchingEvents = events.filter(evt => {
     const skillMatch = evt.requiredSkills.some(skill =>
       volunteer.skills.map(s => s.toLowerCase()).includes(skill.toLowerCase())

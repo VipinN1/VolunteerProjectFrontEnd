@@ -13,13 +13,12 @@ router.post('/events', (req, res) => {
         if (!name || !location || !requiredSkills || !urgency || !date) {
             return res.status(400).json({ message: "All fields (name, location, requiredSkills, urgency, date) are required." });
         }
-        
-        // Validate requiredSkills is an array
+ 
         if (!Array.isArray(requiredSkills)) {
             return res.status(400).json({ message: "Required Skills must be an array." });
         }
 
-        // Validate date format (basic check)
+        // Validate date format
         if (isNaN(Date.parse(date))) {
             return res.status(400).json({ message: "Invalid date format." });
         }
