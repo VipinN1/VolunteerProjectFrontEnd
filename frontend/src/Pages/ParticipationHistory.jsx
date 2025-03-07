@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ParticipationHistory.css";
 
 const ParticipationHistory = () => {
-    // Sample data for volunteer participation history
-    const [history, setHistory] = useState([
-        { id: 1, eventName: "Food Drive", description: "Helping the needy", location: "NYC", skills: "Cooking", urgency: "High", eventDate: "2024-03-15", status: "Completed" },
-        { id: 2, eventName: "Tree Planting", description: "Environmental Event", location: "LA", skills: "Gardening", urgency: "Medium", eventDate: "2024-04-10", status: "Upcoming" },
-    ]);
+    const [history, setHistory] = useState([]);
+
+    // Fetch volunteer history from backend
+    useEffect(() => {
+        fetch("http://localhost:5000/api/volunteer-history")
+            .then((response) => response.json())
+            .then((data) => setHistory(data))
+            .catch((error) => console.error("Error fetching participation history:", error));
+    }, []);
+    
 
     return (
         <div className="history-container">

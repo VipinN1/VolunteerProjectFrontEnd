@@ -1,5 +1,12 @@
 {
   "dependencies": {
     "react-router-dom": "^7.1.5"
+  },
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.0.0"
   }
 }
