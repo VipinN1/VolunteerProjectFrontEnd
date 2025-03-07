@@ -6,6 +6,11 @@ const PORT = 5000;
 
 app.use(cors()); 
 app.use(express.json()); 
+const eventRoutes = require('./routes/eventRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+app.use('/api', eventRoutes);
+app.use('/api', volunteerRoutes);
+
 app.get("/api", (req, res) => {
     res.json({ "users": ["userOne", "UserTwo", "UserThree"] });
 });
