@@ -23,15 +23,14 @@ const ProfilePage = () => {
   const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
 
   useEffect(() => {
-    let token = sessionStorage.getItem('auth-token')
-    if (!token) {return}
-    if (token == "John Doe") {
+    let token = sessionStorage.getItem("auth-token");
+    if (!token) return;
+    if (token === "John Doe") {
       fetch("http://localhost:5000/api/profile")
-      .then((response) => response.json())
-      .then((data) => setProfile(data))
-      .catch((error) => console.error("Error fetching profile data:", error));
+        .then((response) => response.json())
+        .then((data) => setProfile(data))
+        .catch((error) => console.error("Error fetching profile data:", error));
     }
-    
   }, []);
 
   // Handle input changes
@@ -52,9 +51,24 @@ const ProfilePage = () => {
     setProfile((prev) => ({ ...prev, availability: selectedDates }));
   };
 
-  const handleSubmit = (e) => {
+  // Handle form submission (Save Profile)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Profile Data:", profile);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+
+      const result = await response.json();
+      console.log("Profile saved:", result);
+      alert("Profile saved successfully!"); // Show success message
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile.");
+    }
   };
 
   return (
