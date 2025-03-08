@@ -9,7 +9,7 @@ const users = [
     email: "johndoe@gmail.com",
     skills: ["Teaching", "Medical Aid", "Fundraising"],
     preferences: "Weekends through may",
-    availability: ["2025-03-10", "2025-03-15"]
+    availability: ["2025-03-10", "2025-03-15","2025-04-01"]
   },
   {
     id: 2,
@@ -17,13 +17,13 @@ const users = [
     email: "janesmith@gmail.com",
     skills: ["Coding", "Event Planning"],
     preferences: "Weekdays",
-    availability: ["2024-06-10", "2024-07-01"]
+    availability: ["2024-06-10", "2025-07-01"]
   },
   {
     id: 3,
     username: "Alice Brown",
     email: "alicebrown@gmail.com",
-    skills: ["Marketing", "Fundraising"],
+    skills: ["Marketing", "Fundraising", "Event Planning", "Teaching"],
     preferences: "Evenings",
     availability: ["2024-05-15", "2024-07-01"]
   },
@@ -47,10 +47,11 @@ router.post('/match', (req, res) => {
     return res.status(404).json({ message: "Volunteer not found" });
   }
   
+  const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
   // Matching logic
   const matchingEvents = events.filter(evt => {
-    const skillMatch = evt.requiredSkills.some(skill =>
-      volunteer.skills.map(s => s.toLowerCase()).includes(skill.toLowerCase())
+    const skillMatch = evt.requiredSkills.every(skill =>
+      volunteer.skills.map(s => normalizeSkill(s)).includes(normalizeSkill(skill))
     );
     const dateMatch = volunteer.availability && volunteer.availability.includes(evt.date);
     return skillMatch && dateMatch;
