@@ -43,10 +43,11 @@ function App() {
 
   async function handleLogin(username, password) {
     try {
-      fetch("http://localhost:5000/api/register")
+      await(fetch("http://localhost:5000/api/login"))
       .then((response) => response.json())
       .then((data) => setUserLogins(data))
       .catch((error) => console.error("Error fetching logins:", error));
+      
       if (userLogins["usernames"].indexOf(username) != -1) {
         if (userLogins["passwords"][userLogins["usernames"].indexOf(username)] == password) {
           const token = username;
@@ -103,17 +104,21 @@ function App() {
         throw new SyntaxError("Password is empty");
       }
 
-      navigate("/login/");
-
       const response = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({"username": username, "password": password, "email": email}),
       });
 
+      navigate("/login/");
       const result = await response.json();
       console.log("User registration saved:", result);
       alert("User registered successfully!"); // Show success message
+      setUserLogins('');
+      fetch("http://localhost:5000/api/register")
+      .then((response) => response.json())
+      .then((data) => setUserLogins(data))
+      .catch((error) => console.error("Error fetching logins:", error));
     }
     catch(exception) {
       console.log(exception);

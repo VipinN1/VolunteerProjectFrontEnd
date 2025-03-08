@@ -39,6 +39,11 @@ app.post("/api/register", (req, res) => {
     res.json({message: "Registered new user successfully", profile: storedLogins});
 });
 
+// Fetch stored logins
+app.get("/api/login", (req, res) => {
+    res.json(storedLogins);
+});
+
 // Fetch users
 app.get("/api", (req, res) => {
     res.json({ users: ["userOne", "UserTwo", "UserThree"] });
