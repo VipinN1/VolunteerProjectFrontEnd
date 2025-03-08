@@ -93,6 +93,37 @@ describe("User Profile API Tests", () => {
         expect(res.body).toHaveProperty("message", "Profile updated successfully");
     });
 });
+describe("Login API Tests", () => {
+    it("should return stored logins", async () => {
+        const res = await request(app).get("/api/login");
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty("usernames");
+        expect(res.body).toHaveProperty("emails");
+        expect(res.body).toHaveProperty("passwords");
+    });
+
+    it("should successfully log in a user", async () => {
+        const res = await request(app).post("/api/login").send({
+            username: "John Doe",
+            password: "tree113"
+        });
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toHaveProperty("message", "Login successful");
+    });
+});
+
+describe("Register API Tests", () => {
+    it("should register a new user", async () => {
+        const newUser = {
+            username: "JaneDoe",
+            email: "janedoe@gmail.com",
+            password: "securepass123"
+        };
+        const res = await request(app).post("/api/register").send(newUser);
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty("message", "Registered new user successfully");
+    });
+});
 
 describe("Event API Tests", () => {
     it("should return a list of events", async () => {
