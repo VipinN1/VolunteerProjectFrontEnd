@@ -35,9 +35,10 @@ function EventPage() {
   
     setSelectedVolunteerSkills(volunteer.skills);
   
+    const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
     const matchedEvents = events.filter(event => {
-      const skillMatch = event.requiredSkills.some(skill =>
-        volunteer.skills.map(s => s.toLowerCase()).includes(skill.toLowerCase())
+      const skillMatch = event.requiredSkills.every(skill =>
+        volunteer.skills.map(s => normalizeSkill(s)).includes(normalizeSkill(skill))
       );
       const dateMatch = volunteer.availability && volunteer.availability.includes(event.date);
       return skillMatch && dateMatch;

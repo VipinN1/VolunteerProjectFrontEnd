@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1741382378489" clover="3.2.0">
-  <project timestamp="1741382378490" name="All files">
-    <metrics statements="75" coveredstatements="69" conditionals="26" coveredconditionals="23" methods="15" coveredmethods="14" elements="116" coveredelements="106" complexity="0" loc="75" ncloc="75" packages="3" files="4" classes="4"/>
+<coverage generated="1741402693635" clover="3.2.0">
+  <project timestamp="1741402693635" name="All files">
+    <metrics statements="76" coveredstatements="70" conditionals="26" coveredconditionals="23" methods="16" coveredmethods="15" elements="118" coveredelements="108" complexity="0" loc="76" ncloc="76" packages="3" files="4" classes="4"/>
     <package name="server">
       <metrics statements="37" coveredstatements="35" conditionals="9" coveredconditionals="8" methods="7" coveredmethods="6"/>
       <file name="index.js" path="C:\Users\durut\OneDrive\Desktop\SD1\server\index.js">
@@ -50,11 +50,11 @@
       <file name="events.js" path="C:\Users\durut\OneDrive\Desktop\SD1\server\data\events.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
-        <line num="6" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
       </file>
     </package>
     <package name="server.routes">
-      <metrics statements="36" coveredstatements="32" conditionals="17" coveredconditionals="15" methods="8" coveredmethods="8"/>
+      <metrics statements="37" coveredstatements="33" conditionals="17" coveredconditionals="15" methods="9" coveredmethods="9"/>
       <file name="eventRoutes.js" path="C:\Users\durut\OneDrive\Desktop\SD1\server\routes\eventRoutes.js">
         <metrics statements="19" coveredstatements="15" conditionals="11" coveredconditionals="9" methods="2" coveredmethods="2"/>
         <line num="1" count="1" type="stmt"/>
@@ -78,7 +78,7 @@
         <line num="35" count="1" type="stmt"/>
       </file>
       <file name="volunteerRoutes.js" path="C:\Users\durut\OneDrive\Desktop\SD1\server\routes\volunteerRoutes.js">
-        <metrics statements="17" coveredstatements="17" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="6"/>
+        <metrics statements="18" coveredstatements="18" conditionals="6" coveredconditionals="6" methods="7" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -89,13 +89,14 @@
         <line num="45" count="5" type="stmt"/>
         <line num="46" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="47" count="1" type="stmt"/>
-        <line num="51" count="1" type="stmt"/>
-        <line num="52" count="3" type="stmt"/>
-        <line num="53" count="9" type="stmt"/>
-        <line num="55" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="56" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="59" count="1" type="stmt"/>
-        <line num="62" count="1" type="stmt"/>
+        <line num="50" count="32" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="53" count="6" type="stmt"/>
+        <line num="54" count="24" type="stmt"/>
+        <line num="56" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="57" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="60" count="1" type="stmt"/>
+        <line num="63" count="1" type="stmt"/>
       </file>
     </package>
   </project>
