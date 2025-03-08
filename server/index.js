@@ -12,6 +12,12 @@ const volunteerRoutes = require("./routes/volunteerRoutes");
 app.use("/api", eventRoutes);
 app.use("/api", volunteerRoutes);
 
+let storedLogins = {
+    usernames: ["John Doe"],
+    emails: ["johndoe@gmail.com"],
+    passwords: ["tree113"]
+}
+
 let storedProfile = {
     fullName: "John Doe",
     address1: "2331 Apple street",
@@ -27,6 +33,24 @@ let storedProfile = {
 // Fetch users
 app.get("/api", (req, res) => {
     res.json({ users: ["userOne", "UserTwo", "UserThree"] });
+});
+
+app.get("/api/register", (req, res) => {
+    res.json(storedLogins);
+});
+
+// Save registered login
+app.post("/api/register", (req, res) => {
+    storedLogins["usernames"].push(req.body.username);
+    storedLogins["passwords"].push(req.body.password);
+    storedLogins["emails"].push(req.body.email);
+    console.log(storedLogins);
+    res.json({message: "Registered new user successfully", profile: storedLogins});
+});
+
+// Fetch stored logins
+app.get("/api/login", (req, res) => {
+    res.json(storedLogins);
 });
 
 // Fetch profile data
