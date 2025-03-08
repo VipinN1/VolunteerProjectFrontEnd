@@ -25,12 +25,6 @@ function App() {
     emails: []
   });
 
-  var userList = {
-    usernames: ["John Doe"],
-    emails: ["johndoe@gmail.com"],
-    passwords: ["tree113"],
-  }
-
   useEffect(() => {
     fetch("/api").then(
       response => response.json()
@@ -91,7 +85,7 @@ function App() {
         alert("Please enter a valid email address!");
         throw new SyntaxError("Email format is wrong")
       }
-      else if (userList["emails"].indexOf(email) != -1) {
+      else if (userLogins["emails"].indexOf(email) != -1) {
         alert("This email address is already in use!")
         throw new ReferenceError("No 2 accounts can share an email!");
       }
@@ -100,7 +94,7 @@ function App() {
         alert("Please enter a username!");
         throw new SyntaxError("Username is empty");
       }
-      else if (userList["emails"].indexOf(username) != -1) {
+      else if (userLogins["emails"].indexOf(username) != -1) {
         alert("This username is already in use!");
         throw new ReferenceError("No 2 accounts can share the same username!");
       }
@@ -120,10 +114,6 @@ function App() {
       const result = await response.json();
       console.log("User registration saved:", result);
       alert("User registered successfully!"); // Show success message
-
-      /*userList["usernames"].push(username);
-      userList["passwords"].push(password);
-      userList["emails"].push(email);*/
     }
     catch(exception) {
       console.log(exception);
