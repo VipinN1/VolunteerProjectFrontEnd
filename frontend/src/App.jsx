@@ -83,6 +83,7 @@ function App() {
       userLogins["passwords"].push(password);
       userLogins["emails"].push(email);
       navigate("/login/");
+      alert("Succesfully registered account!");
     } catch (exception) {
       console.log(exception);
     }
