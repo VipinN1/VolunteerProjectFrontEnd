@@ -7,6 +7,12 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+let storedLogins = {
+    usernames: ["John Doe"],
+    emails: ["johndoe@gmail.com"],
+    passwords: ["tree113"]
+}
+
 let storedProfile = {
     fullName: "John Doe",
     address1: "2331 Apple street",
@@ -18,6 +24,20 @@ let storedProfile = {
     preferences: "Weekends through May",
     availability: ["2025-03-10", "2025-03-15"],
 };
+
+// Fetch stored logins
+app.get("/api/register", (req, res) => {
+    res.json(storedLogins);
+});
+
+// Save registered login
+app.post("/api/register", (req, res) => {
+    storedLogins["usernames"].push(req.body.username);
+    storedLogins["passwords"].push(req.body.password);
+    storedLogins["emails"].push(req.body.email);
+    console.log(storedLogins);
+    res.json({message: "Registered new user successfully", profile: storedLogins});
+});
 
 // Fetch users
 app.get("/api", (req, res) => {

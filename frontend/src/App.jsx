@@ -19,6 +19,11 @@ function App() {
 
   const [backendData, setBackendData] = useState([{}])
   const navigate = useNavigate();
+  const [userLogins, setUserLogins] = useState({
+    usernames: [],
+    passwords: [],
+    emails: []
+  });
 
   var userList = {
     usernames: ["John Doe"],
@@ -44,8 +49,12 @@ function App() {
 
   async function handleLogin(username, password) {
     try {
-      if (userList["usernames"].indexOf(username) != -1) {
-        if (userList["passwords"][userList["usernames"].indexOf(username)] == password) {
+      fetch("http://localhost:5000/api/register")
+      .then((response) => response.json())
+      .then((data) => setUserLogins(data))
+      .catch((error) => console.error("Error fetching logins:", error));
+      if (userLogins["usernames"].indexOf(username) != -1) {
+        if (userLogins["passwords"][userLogins["usernames"].indexOf(username)] == password) {
           const token = username;
           sessionStorage.setItem('auth-token', token);  // stops here?
           username = '';
@@ -69,6 +78,10 @@ function App() {
 
   async function handleRegister(email, username, password) {
     try {
+      fetch("http://localhost:5000/api/register")
+      .then((response) => response.json())
+      .then((data) => setUserLogins(data))
+      .catch((error) => console.error("Error fetching logins:", error));
       const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (email == "") {
         alert("Please enter your email!");
@@ -91,19 +104,30 @@ function App() {
         alert("This username is already in use!");
         throw new ReferenceError("No 2 accounts can share the same username!");
       }
-
       if (password == "") {
         alert("Please enter a password!");
         throw new SyntaxError("Password is empty");
       }
 
-      userList["usernames"].push(username);
-      userList["passwords"].push(password);
-      userList["emails"].push(email);
       navigate("/login/");
+
+      const response = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({"username": username, "password": password, "email": email}),
+      });
+
+      const result = await response.json();
+      console.log("User registration saved:", result);
+      alert("User registered successfully!"); // Show success message
+
+      /*userList["usernames"].push(username);
+      userList["passwords"].push(password);
+      userList["emails"].push(email);*/
     }
     catch(exception) {
       console.log(exception);
+      alert("Failed to register user.");
     };
   }
 
