@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const sql = require("mssql");
+const sql = require("mysql2");
 
 const app = express();
 const PORT = 5000;
@@ -8,26 +8,49 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
-// SQL Server configuration - FIGURE THIS OUT
-var config = {
-    "user": "John Smith", // Database username
-    "password": "johnsmith1", // Database password
-    "server": "localhost\\sqlexpress", // Server IP address
-    "database": "VolunteerDB", // Database name
-    "options": {
-        "encrypt": false, // Disable encryption
-        "trustServerCertificate": true // For development purposes 
+const connection = sql.createConnection({
+    host:'localhost',
+    user:'local_user',
+    password:'pingas',
+    database:'volunteerdb'
+});
+
+async function testConnection() {
+    try {
+        let pool = await sql.connect(config);
+        let result = await pool.request().query("SELECT 1 AS test");
+        console.log("Connection Test:", result.recordset);
+    } catch (err) {
+        console.error("Test Query Failed:", err);
     }
 }
 
-// Connect to SQL Server
-sql.connect(config, err => {
-    console.log("Connecting to database")
-    if (err) {
-        throw err;
+testConnection();
+
+
+/* SQL Server configuration - FIGURE THIS OUT
+var config = {
+    user: "John Doe", // SQL Server username
+    password: "JohnDoe1234", // SQL Server password
+    server: "localhost", // Change if needed (try "127.0.0.1" or your machine name)
+    port: 1433, // Explicitly specify port
+    database: "VolunteerDB",
+    options: {
+        encrypt: false, // Set to true if using Azure
+        trustServerCertificate: true,
     }
-    console.log("Connection Successful!");
-});
+};
+
+ Connect to SQL Server
+sql.connect(config)
+    .then(pool => {
+        console.log("Connected to SQL Server!");
+        return pool;
+    })
+    .catch(err => {
+        console.error("Database connection failed:", err);
+    });
+*/
 
 const eventRoutes = require("./routes/eventRoutes");
 const volunteerRoutes = require("./routes/volunteerRoutes");
@@ -134,9 +157,31 @@ app.get("/api/volunteer-history", (req, res) => {
 });
 
 if (require.main === module) {
+        connection.connect();
+    if(connection.state === 'disconnected') {
+        console.log("Database connection failed");
+    }
+    else {
+        console.log("Database connection successful");
+
+        connection.query("SELECT * from Users", (err, results, fields) => {
+            if (err) {
+                console.error("Error executing query:", err);
+                return;
+            }
+            console.log("Users data retrieved:", results);
+            console.log(results);
+        });
+
+    }
+
     app.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`);
     });
 }
+
+
+
+
 
 module.exports = app;
