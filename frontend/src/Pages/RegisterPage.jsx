@@ -25,8 +25,8 @@ function RegisterPage( {handleRegister} ) {
         });
         const result = await response.json();
         console.log("Registration successful:",result);
-        navigate(/profile/);
-        alert("Registration successful!");
+        navigate("/login/");
+        alert("Registration successful! Please log in using your new credentials.");
       } catch(error) {
         console.error("Error registering:",error);
         alert("Failed to register.");

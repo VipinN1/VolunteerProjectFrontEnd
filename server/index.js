@@ -107,7 +107,7 @@ app.post("/api/register", (req, res) => {
     let hashedPW = bcrypt.genSalt(pwdSaltRounds, function(err, salt) {bcrypt.hash(password, salt, function(err,hash) {});});
 
     // Inserts new user into Users; if an error occurs, returns the database error
-    connection.connect();
+    //connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
     }
@@ -116,11 +116,9 @@ app.post("/api/register", (req, res) => {
     }
     connection.query(`INSERT INTO Users(Username, PasswordHash, Email) VALUES(${username}, ${hashedPW}, ${email}`, (err) => { 
         if (err) {
-            connection.end();
             return res.status(401).json({message: `Database invalid error: ${err}`});
         }
         else {
-            connection.end();
             return res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
         }
     });
@@ -138,14 +136,14 @@ app.post("/api/login", (req, res) => {
     if (!username || !password) {
         return res.status(400).json({ message: "Both username and password are required" });
     }
-    connection.connect();
+    //connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
     }
     else {
         console.log("Database connection successful");
     }
-    connection.query(`SELECT [Username, PasswordHash] FROM Users`, function(err, data) {
+    connection.query(`SELECT [UserID, Username, PasswordHash] FROM Users`, function(err, data) {
         if (err) {
             return res.status(401).json({message: `Database invalid error: ${err}`});
         }
@@ -153,11 +151,12 @@ app.post("/api/login", (req, res) => {
             for (userInfo in data) {
                 bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
                     if (result && username == userInfo["Username"]) {
-                        connection.end();
+                        //connection.end();
+                        sessionStorage.setItem("auth-token", userInfo["UserID"]);
                         return res.status(200).json({ message: "Login successful", username });
                     }
                     else {
-                        connection.end();
+                        //connection.end();
                         return res.status(401).json({ message: "Invalid username/password combination!" });
                     }
                 })
@@ -235,7 +234,7 @@ if (require.main === module) {
             console.log(results);
         });*/
     }
-    connection.end();
+    //connection.end();
 
     app.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`);
