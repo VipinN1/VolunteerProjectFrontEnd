@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const sql = require("mysql2");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const PORT = 5000;
@@ -15,6 +16,7 @@ const connection = sql.createConnection({
     database:'volunteerdb'
 });
 
+/*
 async function testConnection() {
     try {
         let pool = await sql.connect(config);
@@ -26,7 +28,7 @@ async function testConnection() {
 }
 
 testConnection();
-
+*/
 
 /* SQL Server configuration - FIGURE THIS OUT
 var config = {
@@ -80,32 +82,86 @@ app.get("/api/register", (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-    const { username, email, password } = req.body;
+    const registerData = req.body;
+    const username = registerData["username"];
+    const email = registerData["email"];
+    const password = registerData["password"];
+    const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!username || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
+    if (!email_regex.test(email)) {
+        return res.status(400).json({message: "This email address is invalid!"});
+    }
+    /*
     if (storedLogins.usernames.includes(username)) {
         return res.status(400).json({ message: "This username is already in use!" });
     }
     if (storedLogins.emails.includes(email)) {
         return res.status(400).json({ message: "This email address is already in use!" });
+    }*/
+
+    // Generates password salt for encryption
+    let hashedPW = bcrypt.genSalt(pwdSaltRounds, function(err, salt) {bcrypt.hash(password, salt, function(err,hash) {});});
+
+    // Inserts new user into Users; if an error occurs, returns the database error
+    connection.connect();
+    if(connection.state === 'disconnected') {
+        console.log("Database connection failed");
     }
-    storedLogins.usernames.push(username);
+    else {
+        console.log("Database connection successful");
+    }
+    connection.query(`INSERT INTO Users(Username, PasswordHash, Email) VALUES(${username}, ${hashedPW}, ${email}`, (err) => { 
+        if (err) {
+            return res.status(401).json({message: `Database invalid error: ${err}`});
+        }
+        else {
+            res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
+        }
+    });
+
+    /*storedLogins.usernames.push(username);
     storedLogins.passwords.push(password);
-    storedLogins.emails.push(email);
-    res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
+    storedLogins.emails.push(email);*/    
 });
 
 app.post("/api/login", (req, res) => {
-    const { username, password } = req.body;
+    const registerData = req.body;
+    const username = registerData["username"];
+    const password = registerData["password"];
+    //const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).json({ message: "Both username and password are required" });
     }
-    const userIndex = storedLogins.usernames.indexOf(username);
-    if (userIndex === -1 || storedLogins.passwords[userIndex] !== password) {
-        return res.status(401).json({ message: "Invalid username/password combination!" });
+    connection.connect();
+    if(connection.state === 'disconnected') {
+        console.log("Database connection failed");
     }
-    res.status(200).json({ message: "Login successful", username });
+    else {
+        console.log("Database connection successful");
+    }
+    connection.query(`SELECT [Username, PasswordHash] FROM Users`, function(err, data) {
+        if (err) {
+            return res.status(401).json({message: `Database invalid error: ${err}`});
+        }
+        else {
+            for (userInfo in data) {
+                bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
+                    if (result && username == userInfo["Username"]) {
+                        return res.status(200).json({ message: "Login successful", username });
+                    }
+                    else {
+                        return res.status(401).json({ message: "Invalid username/password combination!" });
+                    }
+                })
+            }
+        }
+    })
+    /* const userIndex = storedLogins.usernames.indexOf(username);
+    if (userIndex === -1 || storedLogins.passwords[userIndex] !== password) {
+        
+    }*/
 });
 
 app.get("/api/login", (req, res) => {
