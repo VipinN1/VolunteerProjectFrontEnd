@@ -1,11 +1,33 @@
 const express = require("express");
 const cors = require("cors");
+const sql = require("mssql");
 
 const app = express();
 const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// SQL Server configuration - FIGURE THIS OUT
+var config = {
+    "user": "John Smith", // Database username
+    "password": "johnsmith1", // Database password
+    "server": "localhost\\sqlexpress", // Server IP address
+    "database": "VolunteerDB", // Database name
+    "options": {
+        "encrypt": false, // Disable encryption
+        "trustServerCertificate": true // For development purposes 
+    }
+}
+
+// Connect to SQL Server
+sql.connect(config, err => {
+    console.log("Connecting to database")
+    if (err) {
+        throw err;
+    }
+    console.log("Connection Successful!");
+});
 
 const eventRoutes = require("./routes/eventRoutes");
 const volunteerRoutes = require("./routes/volunteerRoutes");
