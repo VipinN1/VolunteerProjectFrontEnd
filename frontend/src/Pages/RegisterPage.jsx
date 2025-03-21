@@ -50,15 +50,15 @@ function RegisterPage( {handleRegister} ) {
           <form id="register_form" onSubmit={handleRegSubmit}>
               <p>
                   <label for="email">Email:</label>
-                  <input type="email" id="email" name="email" size="15" required value={registerData.username} onChange={handleRegChange}></input>
+                  <input type="email" id="email" name="email" size="15" required value={registerData.email} onChange={handleRegChange}></input>
               </p>
               <p>
                   <label for="username">Username:</label>
-                  <input type="text" id="username" name="username" size="15" required value={registerData.password} onChange={handleRegChange}></input>
+                  <input type="text" id="username" name="username" size="15" required value={registerData.username} onChange={handleRegChange}></input>
               </p>
               <p>
                   <label for="password">Password:</label>
-                  <input type="password" id="password" name="password" size="15" required value={registerData.email} onChange={handleRegChange}></input>
+                  <input type="password" id="password" name="password" size="15" required value={registerData.password} onChange={handleRegChange}></input>
               </p>
               <p>
                 <button id="register_button" type="submit" value="Register">Register</button>

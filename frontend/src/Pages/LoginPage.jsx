@@ -49,11 +49,11 @@ function LoginPage( {handleLogin} ) {
           <form id="login_form" onSubmit={handleLogSubmit}>
               <p id="login_p">
                   <label for="username_log">Username:</label>
-                  <input type="text" id="username_log" name="username_log" value={loginData.username} onChange={handleLogChange} size="15"></input>
+                  <input type="text" id="username_log" name="username" onChange={handleLogChange} size="15"></input>
               </p>
               <p id="login_p">
                   <label for="password_log">Password:</label>
-                  <input type="password" id="password_log" name="password_log" value={loginData.password} onChange={handleLogChange} size="15"></input>
+                  <input type="password" id="password_log" name="password" onChange={handleLogChange} size="15"></input>
               </p>
               <p id="login_p">
                   <button type="submit" value="Login" onClick={console.log("button clicked")}>Login</button>  {/* TODO: Figure out the major issue with freakin'... CSS SPILLOVER */}

@@ -9,6 +9,8 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 
+const pwdSaltRounds = 10;
+
 const connection = sql.createConnection({
     host:'localhost',
     user:'local_user',
@@ -114,10 +116,12 @@ app.post("/api/register", (req, res) => {
     }
     connection.query(`INSERT INTO Users(Username, PasswordHash, Email) VALUES(${username}, ${hashedPW}, ${email}`, (err) => { 
         if (err) {
+            connection.end();
             return res.status(401).json({message: `Database invalid error: ${err}`});
         }
         else {
-            res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
+            connection.end();
+            return res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
         }
     });
 
@@ -149,9 +153,11 @@ app.post("/api/login", (req, res) => {
             for (userInfo in data) {
                 bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
                     if (result && username == userInfo["Username"]) {
+                        connection.end();
                         return res.status(200).json({ message: "Login successful", username });
                     }
                     else {
+                        connection.end();
                         return res.status(401).json({ message: "Invalid username/password combination!" });
                     }
                 })
@@ -220,16 +226,16 @@ if (require.main === module) {
     else {
         console.log("Database connection successful");
 
-        connection.query("SELECT * from Users", (err, results, fields) => {
+        /*connection.query("SELECT * from Users", (err, results, fields) => {
             if (err) {
                 console.error("Error executing query:", err);
                 return;
             }
             console.log("Users data retrieved:", results);
             console.log(results);
-        });
-
+        });*/
     }
+    connection.end();
 
     app.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`);
