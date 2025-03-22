@@ -282,7 +282,7 @@ if (require.main === module) {
     connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
-        return;
+        
     }
     else {
         console.log("Database connection successful");
