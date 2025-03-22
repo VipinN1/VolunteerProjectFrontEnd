@@ -26,20 +26,20 @@ const ParticipationHistory = () => {
                         <th>Required Skills</th>
                         <th>Urgency</th>
                         <th>Event Date</th>
-                        <th>Participation Status</th>
+                        <th>Match Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     {history.length > 0 ? (
                         history.map((event) => (
                             <tr key={event.id}>
-                                <td>{event.eventName}</td>
-                                <td>{event.description}</td>
-                                <td>{event.location}</td>
-                                <td>{event.skills}</td>
-                                <td>{event.urgency}</td>
-                                <td>{event.eventDate}</td>
-                                <td>{event.status}</td>
+                                <td>{event.EventName}</td>
+                                <td>{event.Description}</td>
+                                <td>{event.Location}</td>
+                                <td>{event.RequiredSkills}</td>
+                                <td>{event.UrgencyLevel}</td>
+                                <td>{new Date(event.EventDate).toLocaleDateString()}</td>
+                                <td>{new Date(event.MatchDate).toLocaleDateString()}</td>
                             </tr>
                         ))
                     ) : (

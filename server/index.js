@@ -194,16 +194,18 @@ app.post("/api/profile", (req, res) => {
 });
 
 app.get("/api/notifications", (req, res) => {
+    //let loggedID = sessionStorage.getItem("auth-token");
     connection.query(`
         SELECT Notifications.Message, Notifications.NotificationDate AS date, Events.EventName
         FROM Notifications
         JOIN Events ON Notifications.EventID = Events.EventID
         ORDER BY Notifications.NotificationDate DESC
-    `, (err, results) => {
+    `,(err, results) => {
         if (err) {
             console.error("Error fetching notifications:", err);
             res.status(500).json({ error: "Internal Server Error" });
         } else {
+            console.log(results);
             res.json(results);
         }
     });
@@ -229,11 +231,10 @@ app.post("/api/notifications", (req, res) => {
     });
 });
 
-
-
 app.get("/api/volunteer-history", async (req, res) => {
     try {
-        const [rows] = await pool.query(`
+        //let loggedID = sessionStorage.getItem("auth-token");
+        const [rows] = await connection.promise().query(`
             SELECT Events.EventName, Events.Description, Events.Location, Events.RequiredSkills, 
                    Events.UrgencyLevel, Events.EventDate, VolunteerMatches.MatchDate 
             FROM VolunteerMatches
@@ -251,7 +252,6 @@ if (require.main === module) {
     connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
-        return;
     }
     else {
         console.log("Database connection successful");
@@ -261,9 +261,5 @@ if (require.main === module) {
         console.log(`Server started on port ${PORT}`);
     });
 }
-
-
-
-
 
 module.exports = app;

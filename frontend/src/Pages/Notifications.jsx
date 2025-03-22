@@ -1,53 +1,41 @@
 import React, { useState, useEffect } from "react";
-import "./ParticipationHistory.css";
+import "./Notifications.css";
 
-const ParticipationHistory = () => {
-    const [history, setHistory] = useState([]);
+const Notifications = () => {
+    const [notifications, setNotifications] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/volunteer-history")
+        fetch("http://localhost:5000/api/notifications")
             .then((response) => response.json())
-            .then((data) => setHistory(data))
-            .catch((error) => console.error("Error fetching participation history:", error));
+            .then((data) => setNotifications(data))
+            .catch((error) => console.error("Error fetching notifications:", error));
     }, []);
 
+    const calculateDaysLeft = (dateStr) => {
+        const today = new Date();
+        const eventDate = new Date(dateStr);
+        const timeDiff = eventDate - today;
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        return daysLeft >= 0 ? `${daysLeft} day(s) left` : "Event passed";
+    };
+
     return (
-        <div className="history-container">
-            <h2>Volunteer Participation History</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Event Name</th>
-                        <th>Description</th>
-                        <th>Location</th>
-                        <th>Required Skills</th>
-                        <th>Urgency</th>
-                        <th>Event Date</th>
-                        <th>Match Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {history.length > 0 ? (
-                        history.map((event, index) => (
-                            <tr key={index}>
-                                <td>{event.EventName}</td>
-                                <td>{event.Description}</td>
-                                <td>{event.Location}</td>
-                                <td>{event.RequiredSkills}</td>
-                                <td>{event.UrgencyLevel}</td>
-                                <td>{event.EventDate}</td>
-                                <td>{event.MatchDate}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="7">No participation history available.</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+        <div className="notifications-container">
+            <title>Volunteer Site - Notifications</title>
+            <h2>🔔 Notification Center</h2>
+            <ul>
+                {notifications.map((notification, index) => (
+                    <li key={index} className="notification-item">
+                        <strong>{notification.EventName}</strong> - {notification.Message}
+                        <br />
+                        <span className="notification-date">
+                            📅 {new Date(notification.date).toLocaleDateString()} | ⏳ {calculateDaysLeft(notification.date)}
+                        </span>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };
 
-export default ParticipationHistory;
+export default Notifications;
