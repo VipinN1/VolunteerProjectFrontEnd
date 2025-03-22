@@ -24,7 +24,6 @@ connection.connect((err) => {
     console.log("Database connected successfully!");
 });
 
-// ✅ Fetch user profile by `UserID`
 app.get("/api/profile/:userID", (req, res) => {
     const userID = req.params.userID;
 
@@ -62,7 +61,6 @@ app.get("/api/profile/:userID", (req, res) => {
     });
 });
 
-// ✅ Update user profile
 app.post("/api/profile/:userID", (req, res) => {
     const userID = req.params.userID;
     const { fullName, address1, address2, city, state, zipCode, skills, availability } = req.body;
@@ -94,7 +92,6 @@ app.post("/api/profile/:userID", (req, res) => {
     );
 });
 
-// ✅ Start Express Server
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
