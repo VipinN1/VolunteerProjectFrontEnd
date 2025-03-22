@@ -1,67 +1,53 @@
 import React, { useState, useEffect } from "react";
-import "./Notifications.css";
+import "./ParticipationHistory.css";
 
-const Notifications = () => {
-    const [notifications, setNotifications] = useState([]);
-    const [newNotification, setNewNotification] = useState({ eventName: "", message: "", date: "" });
-    const [error, setError] = useState("");
+const ParticipationHistory = () => {
+    const [history, setHistory] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/notifications")
+        fetch("http://localhost:5000/api/volunteer-history")
             .then((response) => response.json())
-            .then((data) => setNotifications(data))
-            .catch((error) => console.error("Error fetching notifications:", error));
+            .then((data) => setHistory(data))
+            .catch((error) => console.error("Error fetching participation history:", error));
     }, []);
 
-    const handleChange = (e) => {
-        setNewNotification({ ...newNotification, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        fetch("http://localhost:5000/api/notifications", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newNotification),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.error) {
-                    setError(data.error);
-                } else {
-                    setNotifications([...notifications, data.newNotification]);
-                    setNewNotification({ eventName: "", message: "", date: "" });
-                    setError("");
-                }
-            })
-            .catch((error) => console.error("Error adding notification:", error));
-    };
-
     return (
-        <div className="notifications-container">
-            <title>Volunteer Site - Notifications</title>
-            <h2>🔔 Notification Center</h2>
-            {error && <p className="error">{error}</p>}
-            
-            <ul>
-                {notifications.map((notification, index) => (
-                    <li key={index} className="notification-item">
-                        <strong>{notification.eventName}</strong> - {notification.message}
-                        <br />
-                        <span className="notification-date">📅 {notification.date}</span>
-                    </li>
-                ))}
-            </ul>
-
-            <form onSubmit={handleSubmit} className="notification-form">
-                <h3>Add Notification</h3>
-                <input type="text" name="eventName" placeholder="Event Name" value={newNotification.eventName} onChange={handleChange} required />
-                <input type="text" name="message" placeholder="Message" value={newNotification.message} onChange={handleChange} required />
-                <input type="date" name="date" value={newNotification.date} onChange={handleChange} required />
-                <button type="submit">Add Notification</button>
-            </form>
+        <div className="history-container">
+            <h2>Volunteer Participation History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Required Skills</th>
+                        <th>Urgency</th>
+                        <th>Event Date</th>
+                        <th>Match Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {history.length > 0 ? (
+                        history.map((event, index) => (
+                            <tr key={index}>
+                                <td>{event.EventName}</td>
+                                <td>{event.Description}</td>
+                                <td>{event.Location}</td>
+                                <td>{event.RequiredSkills}</td>
+                                <td>{event.UrgencyLevel}</td>
+                                <td>{event.EventDate}</td>
+                                <td>{event.MatchDate}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="7">No participation history available.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
     );
 };
 
-export default Notifications;
+export default ParticipationHistory;

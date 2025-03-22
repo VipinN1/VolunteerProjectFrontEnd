@@ -18,44 +18,6 @@ const connection = sql.createConnection({
     database:'volunteerdb'
 });
 
-/*
-async function testConnection() {
-    try {
-        let pool = await sql.connect(config);
-        let result = await pool.request().query("SELECT 1 AS test");
-        console.log("Connection Test:", result.recordset);
-    } catch (err) {
-        console.error("Test Query Failed:", err);
-    }
-}
-
-testConnection();
-*/
-
-/* SQL Server configuration - FIGURE THIS OUT
-var config = {
-    user: "John Doe", // SQL Server username
-    password: "JohnDoe1234", // SQL Server password
-    server: "localhost", // Change if needed (try "127.0.0.1" or your machine name)
-    port: 1433, // Explicitly specify port
-    database: "VolunteerDB",
-    options: {
-        encrypt: false, // Set to true if using Azure
-        trustServerCertificate: true,
-    }
-};
-
- Connect to SQL Server
-sql.connect(config)
-    .then(pool => {
-        console.log("Connected to SQL Server!");
-        return pool;
-    })
-    .catch(err => {
-        console.error("Database connection failed:", err);
-    });
-*/
-
 const eventRoutes = require("./routes/eventRoutes");
 const volunteerRoutes = require("./routes/volunteerRoutes");
 app.use("/api", eventRoutes);
@@ -167,18 +129,6 @@ app.post("/api/register", (req, res) => {
     if (!email_regex.test(email)) {
         return res.status(400).json({message: "This email address is invalid!"});
     }
-    /*
-    if (storedLogins.usernames.includes(username)) {
-        return res.status(400).json({ message: "This username is already in use!" });
-    }
-    if (storedLogins.emails.includes(email)) {
-        return res.status(400).json({ message: "This email address is already in use!" });
-    }*/
-
-    // Generates password salt for encryption
-
-    // Inserts new user into Users; if an error occurs, returns the database error
-    //connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
     }
@@ -193,61 +143,38 @@ app.post("/api/register", (req, res) => {
             return res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
         }
     });
-
-    /*storedLogins.usernames.push(username);
-    storedLogins.passwords.push(password);
-    storedLogins.emails.push(email);*/    
 });
 
 app.post("/api/login", (req, res) => {
-    const registerData = req.body;
-    const username = registerData["username"];
-    const password = registerData["password"];
-    //const { username, password } = req.body;
+    const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).json({ message: "Both username and password are required" });
     }
-    //connection.connect();
-    if(connection.state === 'disconnected') {
-        console.log("Database connection failed");
-    }
-    else {
-        console.log("Database connection successful");
-    }
-    connection.query(`SELECT UserID, Username, PasswordHash FROM Users;`, function(err, data) {
-        if (err) {
-            return res.status(401).json({message: `Database invalid error: ${err}`});
-        }
-        else {
-            for (userInfo in data) {
-                if (username == userInfo["Username"] && password == userInfo["PasswordHash"]) {
-                    sessionStorage.setItem("auth-token", userInfo["UserID"]);
-                    return res.status(200).json({ message: "Login successful", username });
-                }
-                else {
-                    //connection.end();
-                    return res.status(401).json({ message: "Invalid username/password combination!" });
-                }
 
-                /*bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
-                    if (result && username == userInfo["Username"]) {
-                        //connection.end();
-                        sessionStorage.setItem("auth-token", userInfo["UserID"]);
-                        return res.status(200).json({ message: "Login successful", username });
-                    }
-                    else {
-                        //connection.end();
-                        return res.status(401).json({ message: "Invalid username/password combination!" });
-                    }
-                })*/
+    // Query for the user with the given username
+    connection.query(
+        "SELECT UserID, Username, PasswordHash FROM Users WHERE Username = ?",
+        [username],
+        (err, results) => {
+            if (err) {
+                console.error("Database error during login:", err);
+                return res.status(500).json({ message: `Database error: ${err}` });
+            }
+            if (results.length === 0) {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
+            }
+            const userInfo = results[0];
+            // Since we're not hashing passwords here, compare directly
+            if (password === userInfo.PasswordHash) {
+                // Return user info so the client can store the token as needed
+                return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username });
+            } else {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
             }
         }
-    })
-    /* const userIndex = storedLogins.usernames.indexOf(username);
-    if (userIndex === -1 || storedLogins.passwords[userIndex] !== password) {
-        
-    }*/
+    );
 });
+
 
 app.get("/api/login", (req, res) => {
     res.status(200).json(storedLogins);
@@ -266,35 +193,58 @@ app.post("/api/profile", (req, res) => {
     res.json({ message: "Profile updated successfully", profile: storedProfile });
 });
 
-const notifications = [
-    { eventName: "Community Cleanup", message: "Reminder: Event this Saturday!", date: "2025-03-10" },
-    { eventName: "Blood Donation Camp", message: "Update: New location assigned.", date: "2025-03-15" },
-];
-
 app.get("/api/notifications", (req, res) => {
-    res.json(notifications);
+    connection.query(`
+        SELECT Notifications.Message, Notifications.NotificationDate AS date, Events.EventName
+        FROM Notifications
+        JOIN Events ON Notifications.EventID = Events.EventID
+        ORDER BY Notifications.NotificationDate DESC
+    `, (err, results) => {
+        if (err) {
+            console.error("Error fetching notifications:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.json(results);
+        }
+    });
 });
+
 
 app.post("/api/notifications", (req, res) => {
-    const { eventName, message, date } = req.body;
-    if (!eventName || !message || !date) {
+    const { UserID, EventID, Message } = req.body;
+
+    if (!UserID || !EventID || !Message) {
         return res.status(400).json({ error: "All fields are required." });
     }
-    if (message.length < 5) {
-        return res.status(400).json({ error: "Message must be at least 5 characters long." });
-    }
-    const newNotification = { eventName, message, date };
-    notifications.push(newNotification);
-    res.status(201).json({ message: "Notification added successfully!", newNotification });
+
+    const sqlQuery = `INSERT INTO Notifications (UserID, EventID, Message) VALUES (?, ?, ?)`;
+
+    connection.query(sqlQuery, [UserID, EventID, Message], (err, result) => {
+        if (err) {
+            console.error("Error adding notification:", err);
+            res.status(500).json({ error: "Internal Server Error" });
+        } else {
+            res.status(201).json({ message: "Notification added successfully!" });
+        }
+    });
 });
 
-const volunteerHistory = [
-    { id: 1, eventName: "Food Drive", description: "Helping the needy", location: "NYC", skills: "Cooking", urgency: "High", eventDate: "2024-03-15", status: "Completed" },
-    { id: 2, eventName: "Tree Planting", description: "Environmental Event", location: "LA", skills: "Gardening", urgency: "Medium", eventDate: "2024-04-10", status: "Upcoming" },
-];
 
-app.get("/api/volunteer-history", (req, res) => {
-    res.json(volunteerHistory);
+
+app.get("/api/volunteer-history", async (req, res) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT Events.EventName, Events.Description, Events.Location, Events.RequiredSkills, 
+                   Events.UrgencyLevel, Events.EventDate, VolunteerMatches.MatchDate 
+            FROM VolunteerMatches
+            JOIN Events ON VolunteerMatches.EventID = Events.EventID
+            ORDER BY VolunteerMatches.MatchDate DESC;
+        `);
+        res.json(rows);
+    } catch (err) {
+        console.error("Error fetching volunteer history:", err);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 if (require.main === module) {
@@ -305,17 +255,7 @@ if (require.main === module) {
     }
     else {
         console.log("Database connection successful");
-
-        /*connection.query("SELECT * from Users", (err, results, fields) => {
-            if (err) {
-                console.error("Error executing query:", err);
-                return;
-            }
-            console.log("Users data retrieved:", results);
-            console.log(results);
-        });*/
     }
-    //connection.end();
 
     app.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`);
