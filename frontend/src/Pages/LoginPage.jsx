@@ -23,6 +23,9 @@ function LoginPage( {handleLogin} ) {
         body: JSON.stringify(loginData),
       });
       const result = await response.json();
+      if (response.status != 201) {
+        throw new Error(result);
+      }
       console.log("Login successful:",result);
       navigate("/profile/");
       alert("Login successful!");

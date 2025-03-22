@@ -79,9 +79,81 @@ let storedProfile = {
     availability: ["2025-03-10", "2025-03-15"],
 };
 
+app.get("/api/profile/:userID", (req, res) => {
+    const userID = req.params.userID;
+
+    connection.query("SELECT * FROM Users WHERE UserID = ?", [userID], (err, userResults) => {
+        if (err) return res.status(500).json({ error: "Database query failed", details: err });
+        if (userResults.length === 0) return res.status(404).json({ message: "User not found" });
+
+        const user = userResults[0];
+
+        // Fetch user skills
+        connection.query("SELECT Skill FROM UserSkills WHERE UserID = ?", [userID], (err, skillResults) => {
+            if (err) return res.status(500).json({ error: "Database query failed", details: err });
+
+            const skills = skillResults.map((s) => s.Skill);
+
+            // Fetch availability
+            connection.query("SELECT AvailableDate FROM UserAvailability WHERE UserID = ?", [userID], (err, availabilityResults) => {
+                if (err) return res.status(500).json({ error: "Database query failed", details: err });
+
+                const availability = availabilityResults.map((a) => a.AvailableDate);
+
+                res.json({
+                    fullName: user.FullName,
+                    address1: user.Address1,
+                    address2: user.Address2,
+                    city: user.City,
+                    state: user.State,
+                    zipCode: user.ZipCode,
+                    skills,
+                    preferences: "",
+                    availability
+                });
+            });
+        });
+    });
+});
+
+app.post("/api/profile/:userID", (req, res) => {
+    const userID = req.params.userID;
+    const { fullName, address1, address2, city, state, zipCode, skills, availability } = req.body;
+
+    // Update Users table
+    connection.query(
+        "UPDATE Users SET FullName = ?, Address1 = ?, Address2 = ?, City = ?, State = ?, ZipCode = ? WHERE UserID = ?",
+        [fullName, address1, address2, city, state, zipCode, userID],
+        (err, results) => {
+            if (err) return res.status(500).json({ error: "Database update failed", details: err });
+            if (results.affectedRows === 0) return res.status(404).json({ message: "User not found" });
+
+            // Delete and insert skills
+            connection.query("DELETE FROM UserSkills WHERE UserID = ?", [userID], () => {
+                skills.forEach((skill) => {
+                    connection.query("INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)", [userID, skill]);
+                });
+            });
+
+            // Delete and insert availability
+            connection.query("DELETE FROM UserAvailability WHERE UserID = ?", [userID], () => {
+                availability.forEach((date) => {
+                    connection.query("INSERT INTO UserAvailability (UserID, AvailableDate) VALUES (?, ?)", [userID, date]);
+                });
+            });
+
+            res.json({ message: "Profile updated successfully" });
+        }
+    );
+});
+
 app.get("/api/register", (req, res) => {
     res.status(200).json(storedLogins);
 });
+
+function hashPassword(password) {
+    bcrypt.genSalt(pwdSaltRounds, function(err, salt) {bcrypt.hash(password, salt, function(err,hash) {return hash;});});
+}
 
 app.post("/api/register", (req, res) => {
     const registerData = req.body;
@@ -104,7 +176,6 @@ app.post("/api/register", (req, res) => {
     }*/
 
     // Generates password salt for encryption
-    let hashedPW = bcrypt.genSalt(pwdSaltRounds, function(err, salt) {bcrypt.hash(password, salt, function(err,hash) {});});
 
     // Inserts new user into Users; if an error occurs, returns the database error
     //connection.connect();
@@ -114,11 +185,11 @@ app.post("/api/register", (req, res) => {
     else {
         console.log("Database connection successful");
     }
-    connection.query(`INSERT INTO Users(Username, PasswordHash, Email) VALUES(${username}, ${hashedPW}, ${email}`, (err) => { 
+    const sql = `INSERT INTO Users(Username, PasswordHash, Email) VALUES (?, ?, ?);`;
+    connection.query(sql, [username, password, email], (err) => { 
         if (err) {
-            return res.status(401).json({message: `Database invalid error: ${err}`});
-        }
-        else {
+            return res.status(401).json({ message: `Database invalid error: ${err}` });
+        } else {
             return res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
         }
     });
@@ -143,13 +214,22 @@ app.post("/api/login", (req, res) => {
     else {
         console.log("Database connection successful");
     }
-    connection.query(`SELECT [UserID, Username, PasswordHash] FROM Users`, function(err, data) {
+    connection.query(`SELECT UserID, Username, PasswordHash FROM Users;`, function(err, data) {
         if (err) {
             return res.status(401).json({message: `Database invalid error: ${err}`});
         }
         else {
             for (userInfo in data) {
-                bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
+                if (username == userInfo["Username"] && password == userInfo["PasswordHash"]) {
+                    sessionStorage.setItem("auth-token", userInfo["UserID"]);
+                    return res.status(200).json({ message: "Login successful", username });
+                }
+                else {
+                    //connection.end();
+                    return res.status(401).json({ message: "Invalid username/password combination!" });
+                }
+
+                /*bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
                     if (result && username == userInfo["Username"]) {
                         //connection.end();
                         sessionStorage.setItem("auth-token", userInfo["UserID"]);
@@ -159,7 +239,7 @@ app.post("/api/login", (req, res) => {
                         //connection.end();
                         return res.status(401).json({ message: "Invalid username/password combination!" });
                     }
-                })
+                })*/
             }
         }
     })
@@ -218,9 +298,10 @@ app.get("/api/volunteer-history", (req, res) => {
 });
 
 if (require.main === module) {
-        connection.connect();
+    connection.connect();
     if(connection.state === 'disconnected') {
         console.log("Database connection failed");
+        return;
     }
     else {
         console.log("Database connection successful");

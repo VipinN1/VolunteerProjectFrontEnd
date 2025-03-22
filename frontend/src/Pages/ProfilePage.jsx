@@ -13,6 +13,16 @@ const ProfilePage = () => {
     preferences: "",
     availability: [],
   });
+  //const userID = 1;
+  useEffect(() => {
+    const userID = sessionStorage.getItem("auth-token"); // Assume userID is stored after login
+    if (!userID) return;
+
+    fetch(`http://localhost:5000/api/profile/${userID}`)
+      .then((response) => response.json())
+      .then((data) => setProfile(data))
+      .catch((error) => console.error("Error fetching profile:", error));
+  }, []);
 
   const states = [
     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
@@ -21,17 +31,6 @@ const ProfilePage = () => {
   ];
 
   const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
-
-  useEffect(() => {
-    let token = sessionStorage.getItem("auth-token");
-    if (!token) return;
-    if (token === "John Doe") {
-      fetch("http://localhost:5000/api/profile")
-        .then((response) => response.json())
-        .then((data) => setProfile(data))
-        .catch((error) => console.error("Error fetching profile data:", error));
-    }
-  }, []);
 
   // Handle input changes
   const handleChange = (e) => {
@@ -54,22 +53,26 @@ const ProfilePage = () => {
   // Handle form submission (Save Profile)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const userID = sessionStorage.getItem("auth-token"); // Assume userID is stored after login
+  
+    console.log("Submitting profile data:", profile); // ✅ Debugging log
+  
     try {
-      const response = await fetch("http://localhost:5000/api/profile", {
+      const response = await fetch(`http://localhost:5000/api/profile/${userID}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
-
+  
       const result = await response.json();
-      console.log("Profile saved:", result);
-      alert("Profile saved successfully!"); // Show success message
+      console.log("Server Response:", result); // ✅ Debugging log
+      alert(result.message || "Profile updated successfully!");
     } catch (error) {
-      console.error("Error saving profile:", error);
-      alert("Failed to save profile.");
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
     }
   };
+  
 
   return (
     <div className="profile-page">

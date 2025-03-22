@@ -24,6 +24,9 @@ function RegisterPage( {handleRegister} ) {
           body: JSON.stringify(registerData),
         });
         const result = await response.json();
+        if (response.status != 201) {
+          throw new Error(result);
+        }
         console.log("Registration successful:",result);
         navigate("/login/");
         alert("Registration successful! Please log in using your new credentials.");
