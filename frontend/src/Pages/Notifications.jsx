@@ -3,6 +3,7 @@ import "./Notifications.css";
 
 const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
+    const loggedID = sessionStorage.getItem("auth-token");
 
     useEffect(() => {
         fetch("http://localhost:5000/api/notifications")
@@ -24,7 +25,8 @@ const Notifications = () => {
             <title>Volunteer Site - Notifications</title>
             <h2>🔔 Notification Center</h2>
             <ul>
-                {notifications.map((notification, index) => (
+                {notifications.filter(notification => notification.userID !== loggedID)
+                .map((notification, index) => (
                     <li key={index} className="notification-item">
                         <strong>{notification.EventName}</strong> - {notification.Message}
                         <br />

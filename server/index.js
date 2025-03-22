@@ -196,7 +196,7 @@ app.post("/api/profile", (req, res) => {
 app.get("/api/notifications", (req, res) => {
     //let loggedID = sessionStorage.getItem("auth-token");
     connection.query(`
-        SELECT Notifications.Message, Notifications.NotificationDate AS date, Events.EventName
+        SELECT Notifications.Message, Notifications.NotificationDate AS date, Notifications.UserID, Events.EventName
         FROM Notifications
         JOIN Events ON Notifications.EventID = Events.EventID
         ORDER BY Notifications.NotificationDate DESC
@@ -236,7 +236,7 @@ app.get("/api/volunteer-history", async (req, res) => {
         //let loggedID = sessionStorage.getItem("auth-token");
         const [rows] = await connection.promise().query(`
             SELECT Events.EventName, Events.Description, Events.Location, Events.RequiredSkills, 
-                   Events.UrgencyLevel, Events.EventDate, VolunteerMatches.MatchDate 
+                   Events.UrgencyLevel, Events.EventDate, VolunteerMatches.MatchDate , VolunteerMatches.UserID
             FROM VolunteerMatches
             JOIN Events ON VolunteerMatches.EventID = Events.EventID
             ORDER BY VolunteerMatches.MatchDate DESC;

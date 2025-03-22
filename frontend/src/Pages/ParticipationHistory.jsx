@@ -3,6 +3,7 @@ import "./ParticipationHistory.css";
 
 const ParticipationHistory = () => {
     const [history, setHistory] = useState([]);
+    const loggedID = sessionStorage.getItem("auth-token");
 
     // Fetch volunteer history from backend
     useEffect(() => {
@@ -31,7 +32,8 @@ const ParticipationHistory = () => {
                 </thead>
                 <tbody>
                     {history.length > 0 ? (
-                        history.map((event) => (
+                        history.filter(event => event.userID !== loggedID)
+                        .map((event) => (
                             <tr key={event.id}>
                                 <td>{event.EventName}</td>
                                 <td>{event.Description}</td>

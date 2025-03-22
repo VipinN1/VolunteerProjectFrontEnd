@@ -27,6 +27,7 @@ function LoginPage( {handleLogin} ) {
         throw new Error(result.message);
       }
       console.log("Login successful:", result);
+      sessionStorage.removeItem("auth-token");
       sessionStorage.setItem("auth-token", result.userID);
       navigate("/profile/");
       alert("Login successful!");
