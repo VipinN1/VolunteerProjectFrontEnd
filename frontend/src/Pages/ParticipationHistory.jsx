@@ -3,10 +3,12 @@ import "./ParticipationHistory.css";
 
 const ParticipationHistory = () => {
     const [history, setHistory] = useState([]);
-    const loggedID = sessionStorage.getItem("auth-token");
+    var loggedID = sessionStorage.getItem("auth-token");
 
     // Fetch volunteer history from backend
     useEffect(() => {
+        loggedID = sessionStorage.getItem("auth-token");
+        console.log(loggedID);
         fetch("http://localhost:5000/api/volunteer-history")
             .then((response) => response.json())
             .then((data) => setHistory(data))
@@ -31,8 +33,11 @@ const ParticipationHistory = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {history.length > 0 ? (
-                        history.filter(event => event.userID !== loggedID)
+                    {history.filter(event => event.UserID == loggedID).length === 0 ? (
+                        <tr>
+                            <td colSpan="7">No participation history available.</td>
+                        </tr>
+                    ) : (history.filter(event => event.UserID == loggedID)
                         .map((event) => (
                             <tr key={event.id}>
                                 <td>{event.EventName}</td>
@@ -44,10 +49,6 @@ const ParticipationHistory = () => {
                                 <td>{new Date(event.MatchDate).toLocaleDateString()}</td>
                             </tr>
                         ))
-                    ) : (
-                        <tr>
-                            <td colSpan="7">No participation history available.</td>
-                        </tr>
                     )}
                 </tbody>
             </table>
