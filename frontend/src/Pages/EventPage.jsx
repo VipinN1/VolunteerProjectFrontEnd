@@ -7,20 +7,39 @@ function EventPage() {
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedVolunteerSkills, setSelectedVolunteerSkills] = useState([]);
-
-  // Fetch events and volunteers from the backend 
-  useEffect(() => {
-    
-    fetch('http://localhost:5000/api/events')
-      .then(response => response.json())
-      .then(data => setEvents(data))
-      .catch(error => console.error("Error fetching events:", error));
-
-    fetch('http://localhost:5000/api/volunteers')
-      .then(response => response.json())
-      .then(data => setVolunteers(data))
-      .catch(error => console.error("Error fetching volunteers:", error));
-  }, []);
+  
+    // Fetch events and volunteers from the backend
+    useEffect(() => {
+      fetch('http://localhost:5000/api/events')
+        .then(response => response.json())
+        .then(data => {          
+          const mappedEvents = data.map(evt => ({
+            id: evt.EventID,
+            name: evt.EventName,
+            description: evt.Description,
+            location: evt.Location,
+            requiredSkills: evt.RequiredSkills ? evt.RequiredSkills.split(",") : [],
+            urgency: evt.UrgencyLevel,
+            date: new Date(evt.EventDate).toISOString().split("T")[0]
+          }));
+          setEvents(mappedEvents);
+        })
+        .catch(error => console.error("Error fetching events:", error));
+  
+      fetch('http://localhost:5000/api/volunteers')
+        .then(response => response.json())
+        .then(data => {          
+          const mappedVolunteers = data.map(v => ({
+            id: v.UserID,
+            username: v.Username,
+            email: v.Email,
+            skills: v.skills || [],         
+            availability: v.availability || []
+          }));
+          setVolunteers(mappedVolunteers);
+        })
+        .catch(error => console.error("Error fetching volunteers:", error));
+    }, []);
 
   function handleVolunteerChange(e) {
     const selectedName = e.target.value;
@@ -35,18 +54,17 @@ function EventPage() {
   
     setSelectedVolunteerSkills(volunteer.skills);
   
-    const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
+    //const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
     const matchedEvents = events.filter(event => {
       const skillMatch = event.requiredSkills.every(skill =>
-        volunteer.skills.map(s => normalizeSkill(s)).includes(normalizeSkill(skill))
+        volunteer.skills.map(s => s).includes(skill)
       );
       const dateMatch = volunteer.availability && volunteer.availability.includes(event.date);
       return skillMatch && dateMatch;
     });
   
     setFilteredEvents(matchedEvents);
-  }
-  
+  }  
 
   function formatSkill(skill) {
     return skill
@@ -55,11 +73,7 @@ function EventPage() {
   }
 
   function handleSubmit(event) {
-    event.preventDefault();    
-    
-    
-
-    
+    event.preventDefault();     
     const eventName = document.getElementById("eventName").value;
     const eventDescription = document.getElementById("eventDescription").value;
     const eventLoc = document.getElementById("eventLoc").value;
@@ -102,8 +116,6 @@ function EventPage() {
         console.error("Error creating event:", error);
         alert("There was an error creating the event.");
     });
-    
-
     
     document.getElementById("event_form").reset();
     document.getElementById("volunteer_form").reset();
@@ -215,7 +227,7 @@ function EventPage() {
             </p>
             {selectedVolunteer && (
               <p>
-                <em>Skills:</em> {selectedVolunteerSkills.map(formatSkill).join(", ")}
+                <em>Skills:</em> {selectedVolunteerSkills.map(s=>s).join(", ")}
               </p>
             )}
             <p>
