@@ -4,18 +4,15 @@ import "./ParticipationHistory.css";
 const ParticipationHistory = () => {
     const [history, setHistory] = useState([]);
 
-    // Fetch volunteer history from backend
     useEffect(() => {
         fetch("http://localhost:5000/api/volunteer-history")
             .then((response) => response.json())
             .then((data) => setHistory(data))
             .catch((error) => console.error("Error fetching participation history:", error));
     }, []);
-    
 
     return (
         <div className="history-container">
-            <title>Volunteer Site - Participation History</title>
             <h2>Volunteer Participation History</h2>
             <table>
                 <thead>
@@ -26,20 +23,20 @@ const ParticipationHistory = () => {
                         <th>Required Skills</th>
                         <th>Urgency</th>
                         <th>Event Date</th>
-                        <th>Participation Status</th>
+                        <th>Match Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     {history.length > 0 ? (
-                        history.map((event) => (
-                            <tr key={event.id}>
-                                <td>{event.eventName}</td>
-                                <td>{event.description}</td>
-                                <td>{event.location}</td>
-                                <td>{event.skills}</td>
-                                <td>{event.urgency}</td>
-                                <td>{event.eventDate}</td>
-                                <td>{event.status}</td>
+                        history.map((event, index) => (
+                            <tr key={index}>
+                                <td>{event.EventName}</td>
+                                <td>{event.Description}</td>
+                                <td>{event.Location}</td>
+                                <td>{event.RequiredSkills}</td>
+                                <td>{event.UrgencyLevel}</td>
+                                <td>{event.EventDate}</td>
+                                <td>{event.MatchDate}</td>
                             </tr>
                         ))
                     ) : (
