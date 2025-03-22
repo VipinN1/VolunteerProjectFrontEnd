@@ -23,17 +23,19 @@ function LoginPage( {handleLogin} ) {
         body: JSON.stringify(loginData),
       });
       const result = await response.json();
-      if (response.status != 201) {
-        throw new Error(result);
+      if (response.status !== 200) { 
+        throw new Error(result.message);
       }
-      console.log("Login successful:",result);
+      console.log("Login successful:", result);
+      sessionStorage.setItem("auth-token", result.userID);
       navigate("/profile/");
       alert("Login successful!");
     } catch(error) {
-      console.error("Error logging in:",error);
+      console.error("Error logging in:", error);
       alert("Failed to log in.");
     }
   }
+  
 
   /*const login = (event) => {  // Placeholder! Make better later if time allows
     event.preventDefault();

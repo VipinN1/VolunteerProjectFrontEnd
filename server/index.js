@@ -200,54 +200,35 @@ app.post("/api/register", (req, res) => {
 });
 
 app.post("/api/login", (req, res) => {
-    const registerData = req.body;
-    const username = registerData["username"];
-    const password = registerData["password"];
-    //const { username, password } = req.body;
+    const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).json({ message: "Both username and password are required" });
     }
-    //connection.connect();
-    if(connection.state === 'disconnected') {
-        console.log("Database connection failed");
-    }
-    else {
-        console.log("Database connection successful");
-    }
-    connection.query(`SELECT UserID, Username, PasswordHash FROM Users;`, function(err, data) {
-        if (err) {
-            return res.status(401).json({message: `Database invalid error: ${err}`});
-        }
-        else {
-            for (userInfo in data) {
-                if (username == userInfo["Username"] && password == userInfo["PasswordHash"]) {
-                    sessionStorage.setItem("auth-token", userInfo["UserID"]);
-                    return res.status(200).json({ message: "Login successful", username });
-                }
-                else {
-                    //connection.end();
-                    return res.status(401).json({ message: "Invalid username/password combination!" });
-                }
 
-                /*bcrypt.compare(password, userInfo["PasswordHash"], function(err, result) {
-                    if (result && username == userInfo["Username"]) {
-                        //connection.end();
-                        sessionStorage.setItem("auth-token", userInfo["UserID"]);
-                        return res.status(200).json({ message: "Login successful", username });
-                    }
-                    else {
-                        //connection.end();
-                        return res.status(401).json({ message: "Invalid username/password combination!" });
-                    }
-                })*/
+    // Query for the user with the given username
+    connection.query(
+        "SELECT UserID, Username, PasswordHash FROM Users WHERE Username = ?",
+        [username],
+        (err, results) => {
+            if (err) {
+                console.error("Database error during login:", err);
+                return res.status(500).json({ message: `Database error: ${err}` });
+            }
+            if (results.length === 0) {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
+            }
+            const userInfo = results[0];
+            // Since we're not hashing passwords here, compare directly
+            if (password === userInfo.PasswordHash) {
+                // Return user info so the client can store the token as needed
+                return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username });
+            } else {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
             }
         }
-    })
-    /* const userIndex = storedLogins.usernames.indexOf(username);
-    if (userIndex === -1 || storedLogins.passwords[userIndex] !== password) {
-        
-    }*/
+    );
 });
+
 
 app.get("/api/login", (req, res) => {
     res.status(200).json(storedLogins);
