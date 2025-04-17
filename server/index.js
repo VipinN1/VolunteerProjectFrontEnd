@@ -94,6 +94,7 @@ app.post("/api/register", (req, res) => {
     const email = registerData["email"];
     const password = registerData["password"];
     const email_regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const saltRounds = 10;
     if (!username || !email || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
@@ -106,13 +107,26 @@ app.post("/api/register", (req, res) => {
     else {
         console.log("Database connection successful");
     }
-    const sql = `INSERT INTO Users(Username, PasswordHash, Email) VALUES (?, ?, ?);`;
-    connection.query(sql, [username, password, email], (err) => { 
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+      if (err) {
+        console.error(err);
+        return res.status(400).json({message: "Salting error"});
+      }
+      bcrypt.hash(password, salt, function(err, hash) {
         if (err) {
-            return res.status(401).json({ message: `Database invalid error: ${err}` });
-        } else {
-            return res.status(201).json({ message: "Registered new user successfully", profile: storedLogins });
+          console.error(err);
+          return;
         }
+        console.log(hash)  // debug
+        const sql = `INSERT INTO Users(Username, PasswordHash, Email) VALUES (?, ?, ?);`;
+        connection.query(sql, [username, hash, email], (err) => { 
+          if (err) {
+              return res.status(401).json({ message: `Database invalid error: ${err}` });
+          } else {
+              return res.status(201).json({ message: "Registered new user successfully"});  // , profile: storedLogins 
+          }
+        });
+      });
     });
 });
 
@@ -136,12 +150,24 @@ app.post("/api/login", (req, res) => {
             }
             const userInfo = results[0];
             // Since we're not hashing passwords here, compare directly
-            if (password === userInfo.PasswordHash) {
+            bcrypt.compare(password, userInfo.PasswordHash, (err, result) => {
+              if (err) {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
+              }
+              if (result) {
+                return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username });
+              }
+              else {
+                return res.status(401).json({ message: "Invalid username/password combination!" });
+              }
+            });
+            
+            /*if (password === userInfo.PasswordHash) {
                 // Return user info so the client can store the token as needed
                 return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username });
             } else {
                 return res.status(401).json({ message: "Invalid username/password combination!" });
-            }
+            }*/
         }
     );
 });
