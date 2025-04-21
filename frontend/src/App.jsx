@@ -9,6 +9,7 @@ import Notifications from "./Pages/Notifications.jsx";
 import ParticipationHistory from "./Pages/ParticipationHistory.jsx";
 import ForgotPassword from "./Pages/ForgotPasswordPage.jsx";
 import ResetPassword from "./Pages/ResetPasswordPage.jsx";
+import ReportPage from "./Pages/ReportPage.jsx";
 import "./App.css";
 
 function App() {
@@ -104,6 +105,7 @@ function App() {
               <Link to="/event" onClick={() => setDropdownOpen(false)}>Event Management</Link>
               <Link to="/notifications" onClick={() => setDropdownOpen(false)}>Notifications</Link>
               <Link to="/participationhistory" onClick={() => setDropdownOpen(false)}>Participation History</Link>
+              <Link to="/report" onClick={() => setDropdownOpen(false)}>Generate Report</Link>
             </div>
           )}
         </div>
@@ -120,6 +122,7 @@ function App() {
           <Route path="/participationhistory" element={<ParticipationHistory />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/report" element={<ReportPage />} />
         </Routes>
       </main>
     </div>
