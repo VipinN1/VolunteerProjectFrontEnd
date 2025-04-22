@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const PDFDocument = require("pdfkit");
 const sql = require("mysql2");
 const bcrypt = require("bcrypt");
 
@@ -386,6 +387,67 @@ app.get("/api/volunteers", (req, res) => {
       });
     });
   });  
+
+app.post("/api/report", (req, res) => {
+  const format = req.body["format"];
+  const subject = req.body["subject"];
+  if (!format) {
+    return res.status(400).json({ message: "Report file format is required" });
+  }
+  if (!subject) {
+    return res.status(400).json({ message: "Report subject is required" });
+  }
+  switch(subject) {  // Switch statement - based on report subject, does different 
+    case "Volunteers and Participation History":
+      connection.query("SELECT * FROM Users;", (err, userResults) => {
+        if (err) {
+          console.error("Error fetching users:", err);
+          return res.status(500).json({ message: "Server error" });
+        }
+        switch(format) {
+          case "PDF":  // TODO, WIP
+            const doc = new PDFDocument();
+            doc.fontSize(16);
+            doc.text(`Volunteers and Participation History Report - ${date.getMonth() + 1}-${date.getDate() + 1}-${date.getFullYear() + 1}`, {
+              align:"center"
+            });
+            doc.moveDown();
+            userResults.forEach(user => {
+              doc.text(`${user.Username} - ${user.Email}`);
+              doc.moveDown();
+              connection.query("SELECT * FROM VolunteerMatches WHERE UserID = ?;", [user.UserID], (err, matches) => {
+                  if (err) {
+                    console.error("Error fetching volunteer matches:", err);
+                    return res.status(500).json({ message: "Server error" });
+                  }
+                  if (matches.length === 0) {
+                    doc.text("No volunteer history", {
+                      indent: 36
+                    });
+                    doc.moveDown();
+                  }
+                  else {
+                    matches.forEach(match => {
+                      
+                    });
+                  }
+              });
+            });
+            break;
+          case "CSV":  // TODO
+            break;
+          default:
+            return res.status(400).json({message: "Invalid report file format"});
+        }
+      })
+      break;
+    case "Event Details and Volunteer Assignments":
+
+      break;
+    default:
+      return res.status(400).json({message: "Invalid report subject" });
+  }
+});
 
 if (require.main === module) {
     connection.connect();
