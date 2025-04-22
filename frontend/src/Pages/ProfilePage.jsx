@@ -30,7 +30,14 @@ const ProfilePage = () => {
     "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
   ];
 
-  const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
+  const skillMap = {
+    teaching:     "Teaching",
+    medicalaid:   "Medical Aid",
+    fundraising:  "Fundraising",
+    eventplanning:"Event Planning",
+    coding:       "Coding",
+    marketing:    "Marketing"
+  };
 
   // Handle input changes
   const handleChange = (e) => {

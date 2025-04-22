@@ -30,7 +30,9 @@ app.get("/api/profile/:userID", (req, res) => {
         connection.query("SELECT Skill FROM UserSkills WHERE UserID = ?", [userID], (err, skillResults) => {
             if (err) return res.status(500).json({ error: "Database query failed", details: err });
 
-            const skills = skillResults.map((s) => s.Skill);
+            const normalize = s => s.Skill.toLowerCase().replace(/\s+/g, "");
+            const skills = skillResults.map(normalize);
+            
 
             // Fetch availability
             connection.query("SELECT AvailableDate FROM UserAvailability WHERE UserID = ?", [userID], (err, availabilityResults) => {
@@ -68,16 +70,22 @@ app.post("/api/profile/:userID", (req, res) => {
 
             // Delete and insert skills
             connection.query("DELETE FROM UserSkills WHERE UserID = ?", [userID], () => {
-                skills.forEach((skill) => {
-                    connection.query("INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)", [userID, skill]);
-                });
+              skills
+              .map(s => s.toLowerCase().replace(/\s+/g, ""))
+              .forEach(skillKey => {
+                connection.query(
+                  "INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)",
+                  [userID, skillKey]
+                );
             });
+            
 
             // Delete and insert availability
             connection.query("DELETE FROM UserAvailability WHERE UserID = ?", [userID], () => {
                 availability.forEach((date) => {
                     connection.query("INSERT INTO UserAvailability (UserID, AvailableDate) VALUES (?, ?)", [userID, date]);
                 });
+            });
             });
 
             res.json({ message: "Profile updated successfully" });
@@ -369,7 +377,10 @@ app.get("/api/volunteers", (req, res) => {
               console.error("Error fetching availability:", err);
               return res.status(500).json({ message: "Server error" });
             }
-            const skills = skillResults.map(row => row.Skill);
+            const skills = skillResults.map(r => 
+              r.Skill.toLowerCase().replace(/\s+/g, "")
+            );
+            
             const availability = availResults.map(row => new Date(row.AvailableDate).toISOString().split("T")[0]);
             volunteers.push({
               UserID: user.UserID,
