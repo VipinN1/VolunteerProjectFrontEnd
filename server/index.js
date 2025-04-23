@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const PDFDocument = require("pdfkit");
+const fs = require("fs");
 const sql = require("mysql2");
 const bcrypt = require("bcrypt");
 
@@ -407,31 +408,51 @@ app.post("/api/report", (req, res) => {
         switch(format) {
           case "PDF":  // TODO, WIP
             const doc = new PDFDocument();
+            const date = new Date();
+            const writeStream = fs.createWriteStream(`./volunteer-report-${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}.pdf`);
+            doc.pipe(writeStream);
+            doc.font("Courier");
             doc.fontSize(16);
             doc.text(`Volunteers and Participation History Report - ${date.getMonth() + 1}-${date.getDate() + 1}-${date.getFullYear() + 1}`, {
               align:"center"
             });
+            doc.fontSize(10);
             doc.moveDown();
             userResults.forEach(user => {
+              doc.font("Courier-Bold");
               doc.text(`${user.Username} - ${user.Email}`);
+              doc.font("Courier");
               doc.moveDown();
-              connection.query("SELECT * FROM VolunteerMatches WHERE UserID = ?;", [user.UserID], (err, matches) => {
+              console.log("Hello");
+              connection.query("SELECT UserID, EventName, EventDate, Location, MatchDate FROM VolunteerMatches LEFT JOIN Events ON VolunteerMatches.EventID = Events.EventID WHERE VolunteerMatches.UserID = ?;", [user.UserID], (err, matches) => {
                   if (err) {
                     console.error("Error fetching volunteer matches:", err);
+                    doc.text("Error! Report could not generate fully.");
+                    doc.end();
                     return res.status(500).json({ message: "Server error" });
                   }
-                  if (matches.length === 0) {
+                  if (matches.length == 0) {
+                    console.log("nope");
                     doc.text("No volunteer history", {
-                      indent: 36
+                      indent: "1"
                     });
                     doc.moveDown();
                   }
                   else {
                     matches.forEach(match => {
-                      
+                      console.log(match.EventDate);
+                      doc.text(`${match.EventDate} - ${match.EventName} at ${match.Location}, matched on ${match.MatchDate}`, {
+                        indent: "1"
+                      });
+                      doc.moveDown();
                     });
                   }
+                  doc.moveDown();
               });
+            });
+            doc.end();
+            writeStream.on('finish', function () {
+              return res.status(200).json({message: "Report successfully generated!"});
             });
             break;
           case "CSV":  // TODO
@@ -442,7 +463,68 @@ app.post("/api/report", (req, res) => {
       })
       break;
     case "Event Details and Volunteer Assignments":
-
+      connection.query("SELECT * FROM Events;", (err, events) => {
+        if (err) {
+          console.error("Error fetching events:", err);
+          return res.status(500).json({ message: "Server error" });
+        }
+        switch(format) {
+          case "PDF":  // TODO, WIP
+            const doc = new PDFDocument();
+            const date = new Date();
+            const writeStream = fs.createWriteStream(`./event-report-${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}.pdf`);
+            doc.pipe(writeStream);
+            doc.fontSize(16);
+            doc.font("Courier");
+            doc.text(`Event Details and Volunteer Assignments Report - ${date.getMonth() + 1}-${date.getDate() + 1}-${date.getFullYear() + 1}`, {
+              align:"center"
+            });
+            doc.fontSize(10);
+            doc.moveDown();
+            events.forEach(event => {
+              doc.font("Courier-Bold");
+              doc.text(`${event.EventName}`);
+              doc.moveDown();
+              doc.font("Courier");
+              doc.text(`Date: ${event.EventDate}, Location: ${event.Location}`);
+              doc.moveDown();
+              doc.text(`Required Skills: ${event.RequiredSkills.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()).replace(/\s./, (str) => str.toUpperCase()).replace(/,/,", ")}`);
+              doc.moveDown();
+              doc.text(`Urgency: ${event.Urgency.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}`);
+              connection.query("SELECT * FROM VolunteerMatches LEFT JOIN Users ON VolunteerMatches.UserID = Users.UserID WHERE VolunteerMatches.EventID = ?;", [event.EventID], (err, matches) => {
+                if (err) {
+                  console.error("Error fetching volunteer assignments:", err);
+                  doc.text("Error! Report could not generate fully.");
+                  doc.end();
+                  return res.status(500).json({ message: "Server error" });
+                }
+                if (matches.length == 0) {
+                  console.log("nope");
+                  doc.text("No assigned volunteers", {
+                    indent: "1"
+                  });
+                  doc.moveDown();
+                }
+                else {
+                  matches.forEach(match => {
+                    doc.text(`${match.FullName} AKA ${match.Username} - ${match.Email}`, {
+                      indent: "1"
+                    });
+                    doc.moveDown();
+                  })
+                }
+              });
+              doc.moveDown();
+            });
+            doc.end();
+            writeStream.on('finish', function () {
+              return res.status(200).json({message: "Report successfully generated!"});
+            });
+            break;
+          case "CSV":
+            break;
+        }
+      });
       break;
     default:
       return res.status(400).json({message: "Invalid report subject" });
