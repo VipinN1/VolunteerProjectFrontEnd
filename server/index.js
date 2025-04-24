@@ -405,10 +405,10 @@ app.post("/api/report", (req, res) => {
           console.error("Error fetching users:", err);
           return res.status(500).json({ message: "Server error" });
         }
+        const date = new Date();
         switch(format) {
           case "PDF":  // TODO, WIP
             const doc = new PDFDocument();
-            const date = new Date();
             const writeStream = fs.createWriteStream(`./volunteer-report-${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}.pdf`);
             doc.pipe(writeStream);
             doc.font("Courier");
@@ -421,7 +421,7 @@ app.post("/api/report", (req, res) => {
             (async () => {
               for (const user of userResults) {
                 doc.font("Courier-Bold");
-                doc.text(`${user.Username} - ${user.Email} | `);
+                doc.text(`${user.Username} - ${user.FullName}, ${user.Email}`);
                 doc.font("Courier");
             
                 try {
@@ -456,6 +456,57 @@ app.post("/api/report", (req, res) => {
             });
             break;
           case "CSV":  // TODO
+            let data_list = [["ID", "Username", "Full Name", "Email"]];
+            let max_length = 4;
+            (async () => {
+              for (const user of userResults) {
+                let temp = [user.UserID, user.Username, user.FullName, user.Email];
+                try {
+                  const [matches] = await connection.promise().query(
+                    "SELECT UserID, EventName, EventDate, Location, MatchDate FROM VolunteerMatches LEFT JOIN Events ON VolunteerMatches.EventID = Events.EventID WHERE VolunteerMatches.UserID = ?;",
+                    [user.UserID]
+                  );
+                  matches.forEach(match => {
+                    temp.push(match.EventName);
+                    temp.push(match.Location)
+                    temp.push(`${(match.EventDate.getMonth()+1).toString().padStart(2,0)}/${match.EventDate.getDate().toString().padStart(2,0)}/${match.EventDate.getFullYear()}`);
+                    temp.push(`${(match.MatchDate.getMonth()+1).toString().padStart(2,0)}/${match.MatchDate.getDate().toString().padStart(2,0)}/${match.MatchDate.getFullYear()}`);
+                  });
+                  data_list.push(temp);
+                  if (temp.length > max_length) {
+                    max_length = temp.length;
+                  }
+                } 
+                catch (err) {
+                  console.error("Error fetching volunteer matches:", err);
+                  return res.status(401).json({message: "Report could not generate fully."});
+                }
+              }
+            })();
+            if (max_length - 4 != 0) {
+              let repetitions = (max_length - 4) / 4;
+              for (let i = 0; i < repetitions; i++) {
+                data_list[0].push(`Event ${i+1} Name`);
+                data_list[0].push(`Event ${i+1} Location`);
+                data_list[0].push(`Event ${i+1} Date`);
+                data_list[0].push(`Event ${i+1} Match Date`);
+                for (let j = 1; j < data_list.length; j++) {
+                  if (data_list[j].length < max_length) {
+                    data_list[j].push("N/A");
+                    data_list[j].push("N/A");
+                    data_list[j].push("N/A");
+                    data_list[j].push("N/A");
+                  }
+                }
+              }
+            }
+            let csv = data_list.map((item) => {  // Converts array to csv format
+              let row = item;
+              return row.join(",");
+            }).join("\n");
+            const filename = `volunteer-report-${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}.csv`;
+            // TODO - Download file somehow
+            return res.status(200).json({message: "Report successfully generated!"});
             break;
           default:
             return res.status(400).json({message: "Invalid report file format"});
@@ -519,6 +570,60 @@ app.post("/api/report", (req, res) => {
             });
             break;
           case "CSV":
+            let event_data = [["ID", "Event Name", "Event Date", "Location", "Skills Needed", "Urgency"]];
+            let max_length = 6;
+            (async () => {
+              for (const event of eventResults) {
+                let temp = [
+                  event.EventID, 
+                  event.EventName, 
+                  `${(event.EventDate.getMonth()+1).toString().padStart(2,0)}/${event.EventDate.getDate().toString().padStart(2,0)}/${event.EventDate.getFullYear()}`,
+                  event.Location,
+                  `${event.RequiredSkills.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()).replace(/\s./, (str) => str.toUpperCase()).replace(/,/,", ")}`,
+                  `${event.UrgencyLevel.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}`
+                ]
+                try {
+                  const [matches] = await connection.promise().query(
+                    "SELECT * FROM VolunteerMatches LEFT JOIN Users ON VolunteerMatches.UserID = Users.UserID WHERE VolunteerMatches.EventID = ?;", 
+                    [event.EventID]
+                  );
+                  matches.forEach(match => {
+                    temp.push(`${match.FullName}`);
+                    temp.push(`${match.Username}`);
+                    temp.push(`${match.Email}`);
+                  });
+                  event_data.push(temp);
+                  if (temp.length > max_length) {
+                    max_length = temp.length;
+                  }
+                }
+                catch (err) {
+                  console.error("Erro fetching event details:",err);
+                  return res.status(401).json({message: "Report could not generate fully."});
+                }
+              }
+            })();
+            if (max_length - 6 != 0) {
+              let repetitions = (max_length - 6) / 3;
+              for (let i = 0; i < repetitions; i++) {
+                event_list[0].push(`Assigned Volunteer ${i+1} Name`);
+                event_list[0].push(`Assigned Volunteer ${i+1} Location`);
+                event_list[0].push(`Assigned Volunteer ${i+1} Date`);
+                for (let j = 1; j < data_list.length; j++) {
+                  if (data_list[j].length < max_length) {
+                    data_list[j].push("N/A");
+                    data_list[j].push("N/A");
+                    data_list[j].push("N/A");
+                  }
+                }
+              }
+            }
+            let csv = event_list.map((item) => {  // Converts array to csv format
+              let row = item;
+              return row.join(",");
+            }).join("\n");
+            const filename = `event-report-${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}.csv`;
+            // TODO - Download file
             break;
         }
       });
