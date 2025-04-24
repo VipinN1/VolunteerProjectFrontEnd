@@ -418,39 +418,37 @@ app.post("/api/report", (req, res) => {
             });
             doc.fontSize(10);
             doc.moveDown();
-            userResults.forEach(user => {
-              doc.font("Courier-Bold");
-              doc.text(`${user.Username} - ${user.Email}`);
-              doc.font("Courier");
-              doc.moveDown();
-              console.log("Hello");
-              connection.query("SELECT UserID, EventName, EventDate, Location, MatchDate FROM VolunteerMatches LEFT JOIN Events ON VolunteerMatches.EventID = Events.EventID WHERE VolunteerMatches.UserID = ?;", [user.UserID], (err, matches) => {
-                  if (err) {
-                    console.error("Error fetching volunteer matches:", err);
-                    doc.text("Error! Report could not generate fully.");
-                    doc.end();
-                    return res.status(500).json({ message: "Server error" });
-                  }
-                  if (matches.length == 0) {
-                    console.log("nope");
-                    doc.text("No volunteer history", {
-                      indent: "1"
-                    });
-                    doc.moveDown();
-                  }
-                  else {
+            (async () => {
+              for (const user of userResults) {
+                doc.font("Courier-Bold");
+                doc.text(`${user.Username} - ${user.Email} - ${user.UserID}`);
+                doc.font("Courier");
+            
+                try {
+                  const [matches] = await connection.promise().query(
+                    "SELECT UserID, EventName, EventDate, Location, MatchDate FROM VolunteerMatches LEFT JOIN Events ON VolunteerMatches.EventID = Events.EventID WHERE VolunteerMatches.UserID = ?;",
+                    [user.UserID]
+                  );
+            
+                  if (matches.length === 0) {
+                    doc.text("No volunteer history", { indent: 1 });
+                  } else {
                     matches.forEach(match => {
-                      console.log(match.EventDate);
                       doc.text(`${match.EventDate} - ${match.EventName} at ${match.Location}, matched on ${match.MatchDate}`, {
-                        indent: "1"
+                        indent: 1
                       });
-                      doc.moveDown();
                     });
                   }
-                  doc.moveDown();
-              });
-            });
-            doc.end();
+                } catch (err) {
+                  console.error("Error fetching volunteer matches:", err);
+                  doc.text("Error! Report could not generate fully.");
+                }
+            
+                doc.moveDown();
+              }
+            
+              doc.end();
+            })();            
             writeStream.on('finish', function () {
               return res.status(200).json({message: "Report successfully generated!"});
             });
