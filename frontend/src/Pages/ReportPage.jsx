@@ -26,9 +26,6 @@ const ReportPage = () => {
   // Handle form submission (Generate Report)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userID = sessionStorage.getItem("auth-token"); // Assume userID is stored after login
-  
-    console.log("Submitting report data:", reportDetails); // ✅ Debugging log
   
     try {
       const response = await fetch(`http://localhost:5000/api/report`, {
@@ -37,9 +34,28 @@ const ReportPage = () => {
         body: JSON.stringify(reportDetails),
       });
   
-      const result = await response.json();
-      console.log("Server Response:", result); // ✅ Debugging log
-      alert(result.message || "Report generated!");
+      if (!response.ok) {
+        throw new Error("Failed to generate report");
+      }
+  
+      const blob = await response.blob();
+  
+      // Decide file name based on type
+      const fileName =
+        reportDetails.subject.includes("Event")
+          ? `event-report.${reportDetails.format.toLowerCase()}`
+          : `volunteer-report.${reportDetails.format.toLowerCase()}`;
+  
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+  
+      // Optional: Clean up blob URL
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error generating report:", error);
       alert("Failed to generate report.");
