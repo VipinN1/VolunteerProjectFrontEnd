@@ -30,7 +30,14 @@ const ProfilePage = () => {
     "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
   ];
 
-  const skillsOptions = ["Teaching", "Medical Aid", "Fundraising", "Event Planning", "Coding", "Marketing"];
+  const skillMap = {
+    teaching:     "Teaching",
+    medicalaid:   "Medical Aid",
+    fundraising:  "Fundraising",
+    eventplanning:"Event Planning",
+    coding:       "Coding",
+    marketing:    "Marketing"
+  };
 
   // Handle input changes
   const handleChange = (e) => {
@@ -53,25 +60,33 @@ const ProfilePage = () => {
   // Handle form submission (Save Profile)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userID = sessionStorage.getItem("auth-token"); // Assume userID is stored after login
+    const userID = sessionStorage.getItem("auth-token");
   
-    console.log("Submitting profile data:", profile); // ✅ Debugging log
+    const normalizeSkill = (skill) => skill.toLowerCase().replace(/\s/g, "");
+  
+    const normalizedProfile = {
+      ...profile,
+      skills: profile.skills.map(normalizeSkill),
+    };
+  
+    console.log("Submitting profile data:", normalizedProfile);
   
     try {
       const response = await fetch(`http://localhost:5000/api/profile/${userID}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profile),
+        body: JSON.stringify(normalizedProfile),
       });
   
       const result = await response.json();
-      console.log("Server Response:", result); // ✅ Debugging log
+      console.log("Server Response:", result);
       alert(result.message || "Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile.");
     }
   };
+  
   
 
   return (
@@ -148,14 +163,23 @@ const ProfilePage = () => {
           />
 
           <label>Skills (Hold Ctrl/Cmd to select multiple) *</label>
-          <select multiple required onChange={handleSkillChange}>
-            {skillsOptions.map((skill) => (
-              <option key={skill} value={skill} selected={profile.skills.includes(skill)}>
-                {skill}
+          <select
+            name="skills"
+            id="skills"
+            multiple
+            required
+            onChange={handleSkillChange}
+          >
+            {Object.entries(skillMap).map(([key,label]) => (
+              <option
+                key={key}
+                value={key}
+                selected={profile.skills.includes(key)}
+              >
+                {label}
               </option>
             ))}
           </select>
-
           <label>Preferences</label>
           <textarea
             name="preferences"

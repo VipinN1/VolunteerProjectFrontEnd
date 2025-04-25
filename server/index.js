@@ -31,8 +31,9 @@ app.get("/api/profile/:userID", (req, res) => {
         connection.query("SELECT Skill FROM UserSkills WHERE UserID = ?", [userID], (err, skillResults) => {
             if (err) return res.status(500).json({ error: "Database query failed", details: err });
 
-            const skills = skillResults.map((s) => s.Skill);
-
+            const normalize = (str) => str.toLowerCase().replace(/\s/g, "");
+            const skills = skillResults.map((s) => normalize(s.Skill));
+            
             // Fetch availability
             connection.query("SELECT AvailableDate FROM UserAvailability WHERE UserID = ?", [userID], (err, availabilityResults) => {
                 if (err) return res.status(500).json({ error: "Database query failed", details: err });
@@ -68,11 +69,14 @@ app.post("/api/profile/:userID", (req, res) => {
             if (results.affectedRows === 0) return res.status(404).json({ message: "User not found" });
 
             // Delete and insert skills
+            const normalize = (str) => str.toLowerCase().replace(/\s/g, "");
+
             connection.query("DELETE FROM UserSkills WHERE UserID = ?", [userID], () => {
-                skills.forEach((skill) => {
-                    connection.query("INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)", [userID, skill]);
-                });
+              skills.forEach((skill) => {
+                connection.query("INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)", [userID, normalize(skill)]);
+              });
             });
+            
 
             // Delete and insert availability
             connection.query("DELETE FROM UserAvailability WHERE UserID = ?", [userID], () => {
