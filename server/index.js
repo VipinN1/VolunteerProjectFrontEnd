@@ -120,7 +120,7 @@ app.post("/api/register", (req, res) => {
           return;
         }
         console.log(hash)  // debug
-        const sql = `INSERT INTO Users(Username, PasswordHash, Email) VALUES (?, ?, ?);`;
+        const sql = `INSERT INTO Users(Username, PasswordHash, Email, Role) VALUES (?, ?, ?, 'User');`;
         connection.query(sql, [username, hash, email], (err) => { 
           if (err) {
               return res.status(401).json({ message: `Database invalid error: ${err}` });

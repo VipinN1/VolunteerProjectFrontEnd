@@ -30,10 +30,10 @@ function LoginPage( {handleLogin} ) {
       sessionStorage.removeItem("auth-token");
       sessionStorage.removeItem("role-token");
       sessionStorage.setItem("auth-token", result.userID);
-      sessionStorage.setItem("role-token", result.Role);
+      sessionStorage.setItem("role-token", result.role);
       window.dispatchEvent(new Event("role-token-changed"));
       navigate("/profile/");
-      alert("Login successful!");
+      alert("Login successful!",result.role);
     } catch(error) {
       console.error("Error logging in:", error);
       alert("Failed to log in.");

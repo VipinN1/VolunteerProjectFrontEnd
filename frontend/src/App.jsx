@@ -35,10 +35,10 @@ function App() {
       };
 
       window.addEventListener("role-token-changed", handleStorageChange);
-      
-      return () => {
+
+      /*return () => {
         window.removeEventListener("role-token-changed", handleStorageChange);
-      };
+      };*/
   }, []);
 
   const toggleDropdown = () => {
