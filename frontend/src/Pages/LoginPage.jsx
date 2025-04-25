@@ -30,6 +30,7 @@ function LoginPage( {handleLogin} ) {
       sessionStorage.removeItem("auth-token");
       sessionStorage.removeItem("role-token");
       sessionStorage.setItem("auth-token", result.userID);
+      sessionStorage.setItem("user-token", result.username);
       sessionStorage.setItem("role-token", result.role);
       window.dispatchEvent(new Event("role-token-changed"));
       navigate("/profile/");

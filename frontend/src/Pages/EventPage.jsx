@@ -57,6 +57,7 @@ function EventPage() {
           setVolunteers(mappedVolunteers);
         })
         .catch(error => console.error("Error fetching volunteers:", error));
+      document.getElementById("main-header").innerHTML = `Welcome, ${sessionStorage.getItem("user-token")}`;
     }, []);
 
   function handleVolunteerChange(e) {

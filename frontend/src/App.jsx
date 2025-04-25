@@ -105,6 +105,7 @@ function App() {
   function logout() {
     sessionStorage.removeItem("role-token");
     sessionStorage.removeItem("auth-token");
+    sessionStorage.removeItem("user-token");
     window.dispatchEvent(new Event("role-token-changed"));
     navigate("/login/");
     alert("Successfully logged out.");
