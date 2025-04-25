@@ -7,6 +7,7 @@ function EventPage() {
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedVolunteerSkills, setSelectedVolunteerSkills] = useState([]);
+  const [selectedEventId, setSelectedEventId] = useState("");
   //For displaying normalized user skills in proper format
   const DISPLAY = {
     eventplanning: "Event Planning",
@@ -170,7 +171,7 @@ function EventPage() {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ eventID: data.matchingEvents[0].EventID, userID: data.volunteer.UserID })
+          body: JSON.stringify({ eventID: Number(selectedEventId), userID: data.volunteer.UserID })
         }).then(response => {
           if (!response.ok) {
             throw new Error("Error making volunteer match");
@@ -180,6 +181,7 @@ function EventPage() {
 
         document.getElementById("volunteer_form").reset();
         setSelectedVolunteer("");
+        setSelectedEventId("");
       })
       .catch(error => {
         console.error("Error matching volunteer:", error);
@@ -258,10 +260,10 @@ function EventPage() {
             )}
             <p>
               <label htmlFor="matchedEvent">Events</label>
-              <select id="matchedEvent" name="matchedEvent" required>
+              <select id="matchedEvent" name="matchedEvent" value={selectedEventId} onChange={e => setSelectedEventId(e.target.value)} required>
                 <option value="">-- Matched Events --</option>
                 {filteredEvents.map(event => (
-                  <option key={event.id} value={event.name}>
+                  <option key={event.id} value={event.id}>
                     {event.name}
                   </option>
                 ))}

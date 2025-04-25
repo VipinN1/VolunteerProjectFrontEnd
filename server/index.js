@@ -353,16 +353,31 @@ app.get("/api/events", (req, res) => {
 
   app.post("/api/matchmade", (req, res) => {
     const {eventID, userID} = req.body;
-    try {
-      connection.query("INSERT INTO VolunteerMatches(UserID, EventID, MatchDate) VALUES (?, ?, NOW());", 
-        [userID, eventID]);
-      connection.query("INSERT INTO Notifications(UserID, EventID, NotificationDate, Message) VALUES (?, ?, NOW(), ?);", 
-        [userID, eventID, "Thanks for signing up!"]);
+    if (!eventID || !userID) {
+      return res.status(400).json({ message: "eventID and userID are required" });
     }
-    catch {
+
+    const insertSql = `
+    INSERT INTO VolunteerMatches (UserID, EventID, MatchDate)
+    SELECT ?, ?, NOW() FROM DUAL
+    WHERE NOT EXISTS (
+      SELECT 1 FROM VolunteerMatches WHERE UserID = ? AND EventID = ?
+    );
+  `;
+  connection.query(insertSql, [userID, eventID, userID, eventID], (err) => {
+    if (err) {
       console.error("Error making match:", err);
       return res.status(500).json({ message: "Match making error" });
     }
+
+    connection.query(
+      `INSERT IGNORE INTO Notifications (UserID, EventID, Message)
+       VALUES (?, ?, 'Thanks for signing up!');`,
+      [userID, eventID]
+    );
+
+    return res.status(201).json({ message: "Match saved" });
+    });
 
   });
 
