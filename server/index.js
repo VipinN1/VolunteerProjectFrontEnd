@@ -200,7 +200,12 @@ app.post("/api/profile", (req, res) => {
 app.get("/api/notifications", (req, res) => {
     //let loggedID = sessionStorage.getItem("auth-token");
     connection.query(`
-        SELECT Notifications.Message, Notifications.NotificationDate AS date, Notifications.UserID, Events.EventName
+        SELECT 
+          Notifications.Message, 
+          Events.EventDate AS EventDate, 
+          Notifications.NotificationDate, 
+          Notifications.UserID, 
+          Events.EventName
         FROM Notifications
         JOIN Events ON Notifications.EventID = Events.EventID
         ORDER BY Notifications.NotificationDate DESC

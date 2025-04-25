@@ -32,7 +32,7 @@ const Notifications = () => {
                         <strong>{notification.EventName}</strong> - {notification.Message}
                         <br />
                         <span className="notification-date">
-                            📅 {new Date(notification.date).toLocaleDateString()} | ⏳ {calculateDaysLeft(notification.date)}
+                            📅 {new Date(notification.EventDate).toLocaleDateString()} | ⏳ {calculateDaysLeft(notification.EventDate)}
                         </span>
                     </li>
                 ))}
