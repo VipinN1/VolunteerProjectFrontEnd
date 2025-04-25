@@ -23,10 +23,22 @@ function App() {
     passwords: ["tree113"],
   });
 
+  const [roleToken, setRoleToken] = useState(sessionStorage.getItem("role-token"));
+
   useEffect(() => {
     fetch("/api")
       .then((response) => response.json())
       .then((data) => setBackendData(data));
+
+      const handleStorageChange = () => {
+        setRoleToken(sessionStorage.getItem("role-token"));
+      };
+
+      window.addEventListener("role-token-changed", handleStorageChange);
+      
+      return () => {
+        window.removeEventListener("role-token-changed", handleStorageChange);
+      };
   }, []);
 
   const toggleDropdown = () => {
@@ -95,8 +107,8 @@ function App() {
       <header id="header_div">
         <p>Volunteer Site</p>
         <div className="dropdown">
-          <button className="dropdown-btn" onClick={toggleDropdown}>Menu ▼</button>
-          {dropdownOpen && (
+          <button className="dropdown-btn" id="default" onClick={toggleDropdown}>Menu ▼</button>
+          {dropdownOpen && roleToken == "Admin" && (
             <div className="dropdown-menu">
               <Link to="/" onClick={() => setDropdownOpen(false)}>Home</Link>
               <Link to="/login" onClick={() => setDropdownOpen(false)}>Login</Link>
@@ -106,6 +118,22 @@ function App() {
               <Link to="/notifications" onClick={() => setDropdownOpen(false)}>Notifications</Link>
               <Link to="/participationhistory" onClick={() => setDropdownOpen(false)}>Participation History</Link>
               <Link to="/report" onClick={() => setDropdownOpen(false)}>Generate Report</Link>
+            </div>
+          )}
+          {dropdownOpen && roleToken == "User" && (
+            <div className="dropdown-menu">
+              <Link to="/" onClick={() => setDropdownOpen(false)}>Home</Link>
+              <Link to="/profile" onClick={() => setDropdownOpen(false)}>Profile</Link>
+              <Link to="/event" onClick={() => setDropdownOpen(false)}>Event Management</Link>
+              <Link to="/notifications" onClick={() => setDropdownOpen(false)}>Notifications</Link>
+              <Link to="/participationhistory" onClick={() => setDropdownOpen(false)}>Participation History</Link>
+            </div>
+          )}
+          {dropdownOpen && !roleToken && (
+            <div className="dropdown-menu">
+              <Link to="/" onClick={() => setDropdownOpen(false)}>Home</Link>
+              <Link to="/login" onClick={() => setDropdownOpen(false)}>Login</Link>
+              <Link to="/register" onClick={() => setDropdownOpen(false)}>Register</Link>
             </div>
           )}
         </div>

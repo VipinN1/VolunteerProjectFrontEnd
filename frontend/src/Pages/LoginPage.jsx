@@ -28,7 +28,10 @@ function LoginPage( {handleLogin} ) {
       }
       console.log("Login successful:", result);
       sessionStorage.removeItem("auth-token");
+      sessionStorage.removeItem("role-token");
       sessionStorage.setItem("auth-token", result.userID);
+      sessionStorage.setItem("role-token", result.Role);
+      window.dispatchEvent(new Event("role-token-changed"));
       navigate("/profile/");
       alert("Login successful!");
     } catch(error) {

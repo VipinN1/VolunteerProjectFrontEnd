@@ -140,7 +140,7 @@ app.post("/api/login", (req, res) => {
 
     // Query for the user with the given username
     connection.query(
-        "SELECT UserID, Username, PasswordHash FROM Users WHERE Username = ?",
+        "SELECT UserID, Username, PasswordHash, Role FROM Users WHERE Username = ?",
         [username],
         (err, results) => {
             if (err) {
@@ -157,7 +157,7 @@ app.post("/api/login", (req, res) => {
                 return res.status(401).json({ message: "Invalid username/password combination!" });
               }
               if (result) {
-                return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username });
+                return res.status(200).json({ message: "Login successful", userID: userInfo.UserID, username: userInfo.Username, role: userInfo.Role });
               }
               else {
                 return res.status(401).json({ message: "Invalid username/password combination!" });
