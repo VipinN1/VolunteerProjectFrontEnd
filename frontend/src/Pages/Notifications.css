@@ -1,4 +1,3 @@
-/* Center the notifications container */
 .notifications-container {
     text-align: center;
     width: 60%;
@@ -11,9 +10,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-
-
-/* Style the notification title */
 .notifications-container h2 {
     color: #007FFF;
     font-weight: bold;
@@ -21,14 +17,12 @@
     margin-bottom: 15px;
 }
 
-/* Style the "No new notifications" message */
 .notifications-container p {
     font-size: 18px;
     color: #333;
     font-weight: normal;
 }
 
-/* Improve readability */
 body {
-    background-color: #f4faff; /* Light blue background */
+    background-color: #f4faff; 
 }
