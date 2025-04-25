@@ -5,6 +5,14 @@ const ParticipationHistory = () => {
     const [history, setHistory] = useState([]);
     var loggedID = sessionStorage.getItem("auth-token");
 
+function parsing (str = '') {  
+  return str.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, c => c.toUpperCase());
+}
+
+function formatSkills (skillString = '') {
+  return skillString.split(/[,\s;]+/).filter(Boolean).map(parsing).join(', ');
+}
+
     // Fetch volunteer history from backend
     useEffect(() => {
         loggedID = sessionStorage.getItem("auth-token");
@@ -43,8 +51,8 @@ const ParticipationHistory = () => {
                                 <td>{event.EventName}</td>
                                 <td>{event.Description}</td>
                                 <td>{event.Location}</td>
-                                <td>{event.RequiredSkills}</td>
-                                <td>{event.UrgencyLevel}</td>
+                                <td>{formatSkills(event.RequiredSkills)}</td>
+                                <td>{parsing(event.UrgencyLevel)}</td>
                                 <td>{new Date(event.EventDate).toLocaleDateString()}</td>
                                 <td>{new Date(event.MatchDate).toLocaleDateString()}</td>
                             </tr>
