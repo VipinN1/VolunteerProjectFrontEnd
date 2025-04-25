@@ -141,7 +141,6 @@ function App() {
             <div className="dropdown-menu">
               <Link to="/" onClick={() => setDropdownOpen(false)}>Home</Link>
               <Link to="/profile" onClick={() => setDropdownOpen(false)}>Profile</Link>
-              <Link to="/event" onClick={() => setDropdownOpen(false)}>Event Management</Link>
               <Link to="/notifications" onClick={() => setDropdownOpen(false)}>Notifications</Link>
               <Link to="/participationhistory" onClick={() => setDropdownOpen(false)}>Participation History</Link>
             </div>
