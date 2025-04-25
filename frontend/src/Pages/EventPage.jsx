@@ -165,6 +165,19 @@ function EventPage() {
         
         setFilteredEvents(data.matchingEvents);
 
+        fetch('http://localhost:5000/api/matchmade', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ eventID: data.matchingEvents[0].EventID, userID: data.volunteer.UserID })
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error("Error making volunteer match");
+          }
+          return response.json();
+        })
+
         document.getElementById("volunteer_form").reset();
         setSelectedVolunteer("");
       })

@@ -351,6 +351,21 @@ app.get("/api/events", (req, res) => {
     });
   });
 
+  app.post("/api/matchmade", (req, res) => {
+    const {eventID, userID} = req.body;
+    try {
+      connection.query("INSERT INTO VolunteerMatches(UserID, EventID, MatchDate) VALUES (?, ?, NOW());", 
+        [userID, eventID]);
+      connection.query("INSERT INTO Notifications(UserID, EventID, NotificationDate, Message) VALUES (?, ?, NOW(), ?);", 
+        [userID, eventID, "Thanks for signing up!"]);
+    }
+    catch {
+      console.error("Error making match:", err);
+      return res.status(500).json({ message: "Match making error" });
+    }
+
+  });
+
   // Volunteer populating array
 app.get("/api/volunteers", (req, res) => {
     connection.query("SELECT * FROM Users;", (err, userResults) => {
