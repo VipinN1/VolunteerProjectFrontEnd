@@ -7,6 +7,24 @@ function EventPage() {
   const [selectedVolunteer, setSelectedVolunteer] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedVolunteerSkills, setSelectedVolunteerSkills] = useState([]);
+  //For displaying normalized user skills in proper format
+  const DISPLAY = {
+    eventplanning: "Event Planning",
+    medicalaid: "Medical Aid",
+    fundraising: "Fundraising",
+    teaching: "Teaching",
+    coding: "Coding",
+    marketing: "Marketing",
+  };
+
+  const formatSkill = (str = "") => {
+    const key = str.toLowerCase().replace(/\s+/g, "");
+    if (DISPLAY[key]) {
+      return DISPLAY[key];          
+    } return str
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/^./, (c) => c.toUpperCase());
+  };
   
     // Fetch events and volunteers from the backend
     useEffect(() => {
@@ -54,10 +72,10 @@ function EventPage() {
   
     setSelectedVolunteerSkills(volunteer.skills);
   
-    //const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
+    const normalizeSkill = skill => skill.toLowerCase().replace(/\s/g, "");
     const matchedEvents = events.filter(event => {
       const skillMatch = event.requiredSkills.every(skill =>
-        volunteer.skills.map(s => s).includes(skill)
+        volunteer.skills.map(normalizeSkill).includes(normalizeSkill(skill))
       );
       const dateMatch = volunteer.availability && volunteer.availability.includes(event.date);
       return skillMatch && dateMatch;
@@ -65,12 +83,6 @@ function EventPage() {
   
     setFilteredEvents(matchedEvents);
   }  
-
-  function formatSkill(skill) {
-    return skill
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (str) => str.toUpperCase());
-  }
 
   function handleSubmit(event) {
     event.preventDefault();     
@@ -227,7 +239,7 @@ function EventPage() {
             </p>
             {selectedVolunteer && (
               <p>
-                <em>Skills:</em> {selectedVolunteerSkills.map(s=>s).join(", ")}
+                <em>Skills:</em> {selectedVolunteerSkills.map(formatSkill).join(", ")}
               </p>
             )}
             <p>

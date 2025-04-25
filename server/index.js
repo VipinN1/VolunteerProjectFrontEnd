@@ -31,7 +31,8 @@ app.get("/api/profile/:userID", (req, res) => {
         connection.query("SELECT Skill FROM UserSkills WHERE UserID = ?", [userID], (err, skillResults) => {
             if (err) return res.status(500).json({ error: "Database query failed", details: err });
 
-            const skills = skillResults.map((s) => s.Skill);
+            const normalize = s => s.Skill.toLowerCase().replace(/\s+/g, "");
+            const skills = skillResults.map(normalize);
 
             // Fetch availability
             connection.query("SELECT AvailableDate FROM UserAvailability WHERE UserID = ?", [userID], (err, availabilityResults) => {
@@ -69,9 +70,13 @@ app.post("/api/profile/:userID", (req, res) => {
 
             // Delete and insert skills
             connection.query("DELETE FROM UserSkills WHERE UserID = ?", [userID], () => {
-                skills.forEach((skill) => {
-                    connection.query("INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)", [userID, skill]);
-                });
+              skills
+              .map(s => s.toLowerCase().replace(/\s+/g, ""))
+              .forEach(skillKey => {
+                connection.query(
+                  "INSERT INTO UserSkills (UserID, Skill) VALUES (?, ?)",
+                  [userID, skillKey]
+                );
             });
 
             // Delete and insert availability
@@ -80,7 +85,7 @@ app.post("/api/profile/:userID", (req, res) => {
                     connection.query("INSERT INTO UserAvailability (UserID, AvailableDate) VALUES (?, ?)", [userID, date]);
                 });
             });
-
+          });
             res.json({ message: "Profile updated successfully" });
         }
     );
@@ -370,7 +375,9 @@ app.get("/api/volunteers", (req, res) => {
               console.error("Error fetching availability:", err);
               return res.status(500).json({ message: "Server error" });
             }
-            const skills = skillResults.map(row => row.Skill);
+            const skills = skillResults.map(r => 
+              r.Skill.toLowerCase().replace(/\s+/g, "")
+            );
             const availability = availResults.map(row => new Date(row.AvailableDate).toISOString().split("T")[0]);
             volunteers.push({
               UserID: user.UserID,
@@ -388,6 +395,14 @@ app.get("/api/volunteers", (req, res) => {
       });
     });
   });  
+
+  function parsing (str = '') {  
+    return str.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, c => c.toUpperCase());  
+  }
+   
+  function formatSkills (skillString = "") {
+    return skillString.split(/[,\s;]+/).filter(Boolean).map(parsing).join(", ");
+  }
 
   app.post("/api/report", async (req, res) => {
     const format = req.body["format"];
@@ -523,8 +538,8 @@ app.get("/api/volunteers", (req, res) => {
           doc.font("Courier-Bold");
           doc.text(`${event.EventName} - ${(event.EventDate.getMonth()+1).toString().padStart(2,0)}/${event.EventDate.getDate().toString().padStart(2,0)}/${event.EventDate.getFullYear()}, ${event.Location}`);
           doc.font("Courier");
-          doc.text(`Required Skills: ${event.RequiredSkills}`);
-          doc.text(`Urgency: ${event.UrgencyLevel}`);
+          doc.text(`Required Skills: ${formatSkills(event.RequiredSkills)}`);
+          doc.text(`Urgency: ${parsing(event.UrgencyLevel)}`);
 
           try {
             const [matches] = await connection.promise().query(
@@ -553,15 +568,20 @@ app.get("/api/volunteers", (req, res) => {
         let event_data = [["ID", "Event Name", "Event Date", "Location", "Skills Needed", "Urgency"]];
         let max_length = 6;
 
+        const csvEscape = (field = "") =>
+          field.includes(",") || field.includes('"')
+            ? `"${field.replace(/"/g, '""')}"`
+            : field;
+
         try {
           for (const event of eventResults) {
             let temp = [
               event.EventID,
-              event.EventName,
+              csvEscape(event.EventName),
               `${(event.EventDate.getMonth()+1).toString().padStart(2,0)}/${event.EventDate.getDate().toString().padStart(2,0)}/${event.EventDate.getFullYear()}`,
-              event.Location,
-              event.RequiredSkills,
-              event.UrgencyLevel
+              csvEscape(event.Location),
+              csvEscape(formatSkills((event.RequiredSkills))),
+              parsing(event.UrgencyLevel)
             ];
 
             const [matches] = await connection.promise().query(
@@ -585,7 +605,7 @@ app.get("/api/volunteers", (req, res) => {
           if (max_length > 6) {
             const reps = (max_length - 6) / 3;
             for (let i = 0; i < reps; i++) {
-              event_data[0].push(`Volunteer ${i+1} Name`, `Volunteer ${i+1} Username`, `Volunteer ${i+1} Email`);
+              event_data[0].push(`Volunteer Name`, `Volunteer Username`, `Volunteer Email`);
             }
             for (let j = 1; j < event_data.length; j++) {
               while (event_data[j].length < max_length) {
@@ -606,8 +626,6 @@ app.get("/api/volunteers", (req, res) => {
           return res.status(500).json({ message: "Report could not generate fully." });
         }
       }
-
-      break;
 
       default:
         return res.status(400).json({ message: "Invalid report file format" });
