@@ -102,6 +102,22 @@ function App() {
     }
   }
 
+  function logout() {
+    sessionStorage.removeItem("role-token");
+    sessionStorage.removeItem("auth-token");
+    window.dispatchEvent(new Event("role-token-changed"));
+    navigate("/login/");
+    alert("Successfully logged out.");
+  }
+
+  function login_nav() {
+    navigate("/login/");
+  }
+
+  function register_nav() {
+    navigate("/register/");
+  }
+
   return (
     <div>
       <header id="header_div">
@@ -136,6 +152,13 @@ function App() {
               <Link to="/register" onClick={() => setDropdownOpen(false)}>Register</Link>
             </div>
           )}
+        </div>
+        <div className="logout">
+          {roleToken && (<button className="logout-button" onClick={logout}>Log Out</button>)}
+        </div>
+        <div className="login-register-btns">
+          {!roleToken && (<button className="login-register-button" onClick={login_nav}>Log In</button>)}
+          {!roleToken && (<button className="login-register-button" onClick={register_nav}>Register</button>)}
         </div>
       </header>
 

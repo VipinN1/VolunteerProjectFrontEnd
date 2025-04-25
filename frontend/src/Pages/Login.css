@@ -91,29 +91,6 @@
   input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
     background-color: lightgoldenrodyellow;
   }
-  
-  #login_button_log, #register_button_log {
-    color: black;
-    position: fixed;
-    top:3%;
-    border: 2px blue solid;
-    width: 85px;
-    height: 40px;
-    font-size: 15px;
-    z-index: 3001;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    background-color: aqua;
-    text-align:center;
-    align-content:center;
-  }
-
-  #login_button_log {
-    right:10%;
-  }
-  
-  #register_button_log {
-    right:2.5%;
-  }
 
   p[id="forgot_msg"] a, p[id="register_msg"] a {
     font-weight:bold;

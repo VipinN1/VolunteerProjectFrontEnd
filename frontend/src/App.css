@@ -74,3 +74,42 @@
 .dropdown-menu a:hover {
   background-color: lightgray;
 }
+
+.logout {
+  position: absolute;
+  top:0px;
+  right:50px;
+}
+
+.logout-button {
+  color: black;
+  border: 2px blue solid;
+  width: 100px;
+  height: 40px;
+  font-size: 15px;
+  z-index: 3001;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: aqua;
+  text-align:center;
+  align-content:center;
+}
+
+.login-register-btns {
+  position: absolute;
+  top:0px;
+  right:25px;
+}
+
+.login-register-button {
+  color: black;
+  border: 2px blue solid;
+  margin-right:10px;
+  width: 100px;
+  height: 40px;
+  font-size: 15px;
+  z-index: 3001;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: aqua;
+  text-align:center;
+  align-content:center;
+}

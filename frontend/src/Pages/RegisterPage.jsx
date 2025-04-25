@@ -45,8 +45,6 @@ function RegisterPage( {handleRegister} ) {
     <>
       <div classname="register-container">
         <title>Volunteer Site - Register</title>
-        <a href="/login/"><button id="login_button_reg">Log In</button></a>
-        <a href="/register/"><button id="register_button_reg">Register</button></a>
         
         <div id="body_div_reg">
           <h1 id="register_h1">Create your account!</h1>

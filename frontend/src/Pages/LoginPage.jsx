@@ -50,8 +50,6 @@ function LoginPage( {handleLogin} ) {
     <>
       <div classname="login-container">
         <title>Volunteer Site - Login</title>
-        <a href="/login/"><button id="login_button_log">Log In</button></a>
-        <a href="/register/"><button id="register_button_log">Register</button></a>
         
         <div id="body_div">
           <h1 id="login_h1">Log Into Your Account</h1>
