@@ -15,7 +15,7 @@ const ProfilePage = () => {
   });
   //const userID = 1;
   useEffect(() => {
-    const userID = sessionStorage.getItem("auth-token"); // Assume userID is stored after login
+    const userID = sessionStorage.getItem("auth-token"); 
     if (!userID) return;
 
     fetch(`http://localhost:5000/api/profile/${userID}`)
@@ -52,12 +52,24 @@ const ProfilePage = () => {
   };
 
   // Handle date selection for availability
-  const handleAvailabilityChange = (e) => {
-    const selectedDates = Array.from(e.target.selectedOptions, (option) => option.value);
-    setProfile((prev) => ({ ...prev, availability: selectedDates }));
+    const handleAvailabilityChange = (e) => {
+      const newDate = e.target.value;
+      if (newDate && !profile.availability.includes(newDate)) {
+        setProfile((prev) => ({
+          ...prev,
+          availability: [...prev.availability, newDate]
+        }));
+      }
+    };
+  
+  const removeDate = (indexToRemove) => {
+    setProfile((prev) => ({
+      ...prev,
+      availability: prev.availability.filter((_, i) => i !== indexToRemove)
+    }));
   };
-
-  // Handle form submission (Save Profile)
+  
+  // Handle form submission 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userID = sessionStorage.getItem("auth-token");
@@ -188,8 +200,17 @@ const ProfilePage = () => {
             onChange={handleChange}
           ></textarea>
 
-          <label>Availability (Select multiple dates) *</label>
-          <input type="date" multiple required onChange={handleAvailabilityChange} />
+          <label>Availability (You can enter multiple dates) *</label>
+          <input type="date" onChange={handleAvailabilityChange} style={{ color: "black", backgroundColor: "white" }} />
+
+          <ul>
+            {profile.availability.map((date, idx) => (
+              <li key={idx}>
+                {date}
+                <button type="button" onClick={() => removeDate(idx)}>Remove</button>
+              </li>
+            ))}
+          </ul>
 
           <button type="submit">Save Profile</button>
         </form>
